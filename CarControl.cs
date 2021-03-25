@@ -24,9 +24,9 @@ public class CarControl : MonoBehaviour
     public float engineRPM = 0.0f;
 
     //engine charateristics
-    private float MaxEngineRPM = 9000.0f;
+    public float MaxEngineRPM = 9000.0f;
     private float MinEngineRPM = 950.0f;
-    private float shiftUpRPM = 5000.0f;
+    private float shiftUpRPM = 4000.0f;
     private float downShiftRPM = 1100.0f;
 
     //Engine max torque NM and RPM
@@ -124,8 +124,6 @@ public class CarControl : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        // Compute the engine RPM based on the average RPM of the two wheels, then call the shift gear function
-
         engineRPM = MinEngineRPM + 2 * (30f * rigidB.velocity.magnitude * GearRatio[currentGear] * finalDriveRatio) / (3.6f * Mathf.PI * 0.3f);
 
         if (inputManager.transmission)
@@ -210,7 +208,7 @@ public class CarControl : MonoBehaviour
 
         Debug.Log("Current Gear:" + currentGear);
         //Debug.Log("New Torque:" + newTorque);
-        //Debug.Log("Engine RPM:" + engineRPM);
+        Debug.Log("Engine RPM:" + engineRPM);
         Debug.Log("autoTransmission: " + autoTransmission);
 
 

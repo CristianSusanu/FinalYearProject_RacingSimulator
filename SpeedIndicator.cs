@@ -20,8 +20,8 @@ public class SpeedIndicator : MonoBehaviour
     private float maxRPM = 9000f;
     private float minRPM = 950f;
     private float RPM = 0.0f;
-    private float minRPMArrowAngle = 1f;
-    private float maxRPMArrowAngle = -195f;
+    private float minRPMArrowAngle = -17f;
+    private float maxRPMArrowAngle = -174;
 
     //for fuel needle
     private float maxFuelArrowAngle = -92f;
@@ -43,7 +43,8 @@ public class SpeedIndicator : MonoBehaviour
     {
 
         speed = car.velocity.magnitude * 3.6f;
-        RPM = minRPM + 2 * (30f * car.velocity.magnitude * 3.587f * 4.3f) / (3.6f * Mathf.PI * 0.3f); //multiplied by two ar this is the RPM for one wheen only
+        //RPM = minRPM + 2 * (30f * car.velocity.magnitude * 3.587f * 4.3f) / (3.6f * Mathf.PI * 0.3f); //multiplied by two ar this is the RPM for one wheen only
+        RPM = carControl.engineRPM;
 
         if (speedNeedle != null)
         {
@@ -52,7 +53,7 @@ public class SpeedIndicator : MonoBehaviour
 
         if(RPMNeedle != null)
         {
-            RPMNeedle.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minRPMArrowAngle, maxRPMArrowAngle, RPM / maxRPM));
+            RPMNeedle.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minRPMArrowAngle + 18f, maxRPMArrowAngle, RPM / maxRPM));
         }
 
         if(steeringWheel != null)
