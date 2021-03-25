@@ -8,6 +8,7 @@ public class SpeedIndicator : MonoBehaviour
     public Rigidbody car;
     public WheelCollider tractionWheel1;
     public WheelCollider tractionWheel2;
+    public CarControl carControl;
 
     //for speed needle
     private float maxSpeed = 240f;//maximum speed of the vehicle
@@ -17,9 +18,10 @@ public class SpeedIndicator : MonoBehaviour
 
     //for rpm count needle
     private float maxRPM = 9000f;
+    private float minRPM = 950f;
     private float RPM = 0.0f;
-    private float minRPMArrowAngle = -23f;
-    private float maxRPMArrowAngle = -174f;
+    private float minRPMArrowAngle = 1f;
+    private float maxRPMArrowAngle = -195f;
 
     //for fuel needle
     private float maxFuelArrowAngle = -92f;
@@ -39,10 +41,10 @@ public class SpeedIndicator : MonoBehaviour
 
     private void Update()
     {
-        
-         speed = car.velocity.magnitude * 3.6f;
-        //speed = transform.InverseTransformVector(car.velocity).z * 3.6f;
-        RPM = (30f * car.velocity.magnitude * 3.587f * 4.3f) / (3.6f * Mathf.PI * 0.3f);
+
+        speed = car.velocity.magnitude * 3.6f;
+        RPM = minRPM + 2 * (30f * car.velocity.magnitude * 3.587f * 4.3f) / (3.6f * Mathf.PI * 0.3f); //multiplied by two ar this is the RPM for one wheen only
+
         if (speedNeedle != null)
         {
             speedNeedle.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minSpeedArrowAngle, maxSpeedArrowAngle, speed / maxSpeed));
