@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,23 +10,49 @@ public class GameManager : MonoBehaviour
 
     private float minRPMPosition = -533f;
     private float maxRPMPosition = -726f;
-    private float wantedRPMPosition = 0.0f;
 
-    public float RPM = 0.0f;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private float RPM = 0.0f;
 
-    // Update is called once per frame
+    public Text speedText;
+
+    public Text RPMIndicator;
+    public Text gearIndicatorText;
+    public Text transmissionIndicatorText;
+
+    private float speed = 0.0f;
+
     void FixedUpdate()
     {
+        // Speed display in kmh
+        speed = carControl.rigidB.velocity.magnitude * 3.6f;
+        speedText.text = ((int)speed).ToString() + "Km/h";
+
+        //RPM indicator
         RPM = carControl.engineRPM;
+        RPMIndicator.text = ((int)RPM).ToString() + "RPM";
         rpmNeedle.transform.eulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minRPMPosition + 20f, maxRPMPosition, carControl.engineRPM / carControl.MaxEngineRPM));
-        wantedRPMPosition = minRPMPosition - maxRPMPosition;
-        float temp = carControl.engineRPM / carControl.MaxEngineRPM;
-        //rpmNeedle.transform.eulerAngles = new Vector3(0f, 0f, minRPMPosition - wantedRPMPosition * RPM / carControl.MaxEngineRPM);
+
+        //Transmission indicator
+        if (carControl.autoTransmission)
+        {
+            transmissionIndicatorText.text = "A";
+        }
+        else
+        {
+            transmissionIndicatorText.text = "M";
+        }
+    }
+
+    public void gearChange()
+    {
+        //gearIndicatorText.text = carControl.currentGear.ToString();
+        if(carControl.currentGear == 0)
+        {
+            gearIndicatorText.text = "R";
+        }
+        else
+        {
+            gearIndicatorText.text = carControl.currentGear.ToString();
+        }
     }
 }

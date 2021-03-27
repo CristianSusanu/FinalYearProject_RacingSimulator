@@ -10,10 +10,11 @@ public class InputManager : MonoBehaviour
     public bool shiftUp;
     public bool shiftDown;
 
-    public bool li;
-    public bool brake;
-    public bool reverse;
-    public bool transmission;
+    public bool li;//switch lights on/off
+    public bool brake;//apply car brake
+    public bool reverse;//car reverse
+    public bool transmission;//switch between automatic and manual transmission
+    public bool carReset;//reset the car in case it rolls over
 
     // Update is called once per frame
 
@@ -28,6 +29,8 @@ public class InputManager : MonoBehaviour
         li = Input.GetKeyDown(KeyCode.L);
         brake = Input.GetKey(KeyCode.Space);
         reverse = Input.GetKey(KeyCode.DownArrow);
-        transmission = Input.GetKey(KeyCode.X);
+        //transmission = Input.GetKey(KeyCode.X);
+        transmission = Input.GetKeyDown(KeyCode.X);
+        carReset = Input.GetKeyDown(KeyCode.R);
     }
 }

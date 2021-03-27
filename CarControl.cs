@@ -23,11 +23,14 @@ public class CarControl : MonoBehaviour
     public int currentGear = 1;
     public float engineRPM = 0.0f;
 
+    public GameManager gameManager;
+
     //engine charateristics
     public float MaxEngineRPM = 9000.0f;
     private float MinEngineRPM = 950.0f;
-    private float shiftUpRPM = 4000.0f;
-    private float downShiftRPM = 1100.0f;
+    private float shiftUpRPM = 5500.0f;
+    private float downShiftRPM = 3000.0f;
+    private int index = 0;
 
     //Engine max torque NM and RPM
     public float maxTorque = 149;//149NM at 5200RPM
@@ -41,7 +44,15 @@ public class CarControl : MonoBehaviour
     float engineEfficiencyStep = 250.0f;
 
     public bool autoTransmission = false;
-    //pana aici
+
+    public float carSpeed = 0.0f;
+    private float carMaxSpeed = 240f;
+    private float reverseGearMaxSpeed = 20f;
+    private float firstGearMaxSpeed = 85f;
+    private float secondGearMaxSpeed = 135f;
+    private float thirdGearMaxSpeed = 155f;
+    private float fourthGearMaxSpeed = 170f;
+    private float fifthGearMaxSpeed = 240f;
 
     public List<GameObject> steeringWheels;
     public List<GameObject> meshes;//contain all the wheel objects
@@ -58,6 +69,7 @@ public class CarControl : MonoBehaviour
 
     float gearShiftDelay = 0.0f;
     private float torque = 15000f;
+    private float newTorque = 0.0f;
 
     public void ShiftUp()
     {
@@ -66,9 +78,10 @@ public class CarControl : MonoBehaviour
         //check whether we have waited enough before shifting gear
         if (now < gearShiftDelay) return;
 
-        if ((currentGear > 0 && currentGear < GearRatio.Length - 1 && engineRPM > shiftUpRPM) || (currentGear == 0 && engineRPM < shiftUpRPM))
+        if ((currentGear > 0 && currentGear < GearRatio.Length - 1 && engineRPM > shiftUpRPM) || (currentGear == 0 && engineRPM < 1050f))
         {
             currentGear++;
+            gameManager.gearChange();
 
             //delay next shift with 1s
             gearShiftDelay = now + 1.0f;
@@ -85,6 +98,7 @@ public class CarControl : MonoBehaviour
         if ((currentGear > 1) || (currentGear == 1 && engineRPM < 1050f))
         {
             currentGear--;
+            gameManager.gearChange();
 
             //delay next shift with 0.1s
             gearShiftDelay = now + 0.1f;
@@ -95,7 +109,7 @@ public class CarControl : MonoBehaviour
     void Start()
     {
         inputManager = GetComponent<InputManager>();
-        rigidB.centerOfMass = new Vector3(0.0f, 0.15f, 0.0f);
+        rigidB.centerOfMass = new Vector3(0.0f, 0.25f, 0.0f);
     }
 
     void Update()
@@ -119,27 +133,31 @@ public class CarControl : MonoBehaviour
         {
             sLight.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
         }
+        if (inputManager.transmission && autoTransmission)
+        {
+            autoTransmission = false;
+        }
+        else if (inputManager.transmission && !autoTransmission)
+        {
+            autoTransmission = true;
+        }
+
+        //for resetting the car in case it rolled over
+        if (inputManager.carReset)
+        {
+            transform.position = new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z);
+            transform.rotation = Quaternion.Euler(0, transform.localEulerAngles.y, 0);
+        }
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         engineRPM = MinEngineRPM + 2 * (30f * rigidB.velocity.magnitude * GearRatio[currentGear] * finalDriveRatio) / (3.6f * Mathf.PI * 0.3f);
+        carSpeed = rigidB.velocity.magnitude * 3.6f;
 
-        if (inputManager.transmission)
-        {
-            if (autoTransmission)
-            {
-                autoTransmission = false;
-            }
-            else
-            {
-                autoTransmission = true;
-            }
-        }
         if (autoTransmission)
         {
-            //automatic shifting
+            //automatic shifting 
             if (autoTransmission && currentGear == 1 && inputManager.throttle < 0.0f)
             {
                 ShiftDown();//reverse
@@ -148,7 +166,7 @@ public class CarControl : MonoBehaviour
             {
                 ShiftUp();//to change from reverse to drive
             }
-            else if (autoTransmission && engineRPM > shiftUpRPM && inputManager.throttle > 0.0f)
+            else if (autoTransmission && inputManager.throttle > 0.0f && engineRPM > shiftUpRPM)
             {
                 ShiftUp();//shift up
             }
@@ -159,6 +177,7 @@ public class CarControl : MonoBehaviour
         }
         else
         {
+            //manual shifting
             if (inputManager.shiftUp)
             {
                 ShiftUp();
@@ -170,7 +189,7 @@ public class CarControl : MonoBehaviour
             }
         }
        
-        int index = (int) (engineRPM / engineEfficiencyStep);
+        index = (int) (engineRPM / engineEfficiencyStep);
         if (index >= engineEfficiency.Length)
         {
             index = engineEfficiency.Length - 1;
@@ -179,9 +198,113 @@ public class CarControl : MonoBehaviour
         {
             index = 0;
         }
-        //calculate new torque value
-        float newTorque = torque * GearRatio[currentGear] * finalDriveRatio * engineEfficiency[index];
 
+        //calculate torque
+        torqueCalculation();
+
+        //brakeAndAccelerate();
+        brakeAndAccelerate();
+        Steering();
+
+        /*
+        //braking part
+        if (inputManager.brake)
+        {
+            BackLeftWheel.motorTorque = 0.0f;
+            BackLeftWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+
+            BackRightWheel.motorTorque = 0.0f;
+            BackRightWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+
+            FrontLeftWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+            FrontRightWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+        }
+        else
+        {
+            BackLeftWheel.motorTorque = newTorque * Time.deltaTime * inputManager.throttle;
+            BackLeftWheel.brakeTorque = 0.0f;
+
+            BackRightWheel.motorTorque = newTorque * Time.deltaTime * inputManager.throttle;
+            BackRightWheel.brakeTorque = 0.0f;
+
+            FrontLeftWheel.brakeTorque = 0.0f;
+            FrontRightWheel.brakeTorque = 0.0f;
+        }*/
+
+        Debug.Log("Current Gear:" + currentGear);
+        Debug.Log("index: " + index);
+
+        /*  //front wheel steering
+          FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
+          FrontLeftWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
+
+          FrontRightWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
+          FrontRightWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);*/
+
+        foreach (GameObject mesh in meshes)
+        {
+            mesh.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).z >= 0 ? -1 : 1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
+        }
+
+        //rigidB.AddForceAtPosition(-transform.up * rigidB.velocity.sqrMagnitude, transform.position);
+        rigidB.AddForce(-transform.up * downForce * rigidB.velocity.magnitude);
+    }
+
+    /*
+
+    foreach (WheelCollider wheel in throttleWheels)
+    {
+        if (inputManager.brake)
+        {
+            wheel.motorTorque = 0f;
+            wheel.brakeTorque = brakeIntensity * Time.deltaTime; //multiply by time to account for faster computer frames
+        }
+        else
+        {
+            wheel.motorTorque = strengthCoeffiecient * Time.deltaTime * inputManager.throttle;
+            wheel.brakeTorque = 0f;
+        }
+    }
+
+    foreach (GameObject wheel in steeringWheels)
+    {
+        wheel.GetComponent<WheelCollider>().steerAngle = maxTurn * inputManager.steering;
+        wheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxTurn, 0f);
+    }
+
+    foreach (GameObject mesh in meshes)
+    {
+        mesh.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).z >= 0 ? -1 : 1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
+    }*/
+
+    private float wheelBaseLength = 2.4f;
+    private float rearTrackSize = 1.35f;
+    private float turnRadius = 10f;
+    private float maxWheelTurn = 30f;
+
+    private void Steering()
+    {
+        if(inputManager.steering > 0)
+        {
+            FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius + (rearTrackSize / 2))) * inputManager.steering ;
+            FrontRightWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius - (rearTrackSize / 2))) * inputManager.steering;
+        } else if(inputManager.steering < 0)
+        {
+            FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius - (rearTrackSize / 2))) * inputManager.steering;
+            FrontRightWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius + (rearTrackSize / 2))) * inputManager.steering;
+        } else
+        {
+            FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = 0;
+            FrontRightWheel.GetComponent<WheelCollider>().steerAngle = 0;
+        }
+
+        //Wheel movement left to right
+        FrontLeftWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
+        FrontRightWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
+    }
+
+    private void brakeAndAccelerate()
+    {
         //braking part
         if (inputManager.brake)
         {
@@ -205,107 +328,23 @@ public class CarControl : MonoBehaviour
             FrontLeftWheel.brakeTorque = 0.0f;
             FrontRightWheel.brakeTorque = 0.0f;
         }
-
-        Debug.Log("Current Gear:" + currentGear);
-        //Debug.Log("New Torque:" + newTorque);
-        Debug.Log("Engine RPM:" + engineRPM);
-        Debug.Log("autoTransmission: " + autoTransmission);
-
-
-        /*
-            //braking part
-            if (inputManager.brake){
-                BackLeftWheel.motorTorque = 0.0f;
-                BackLeftWheel.brakeTorque = brakeIntensity * Time.deltaTime * inputManager.throttle;// / GearRatio[CurrentGear]; //multiply by time to account for faster computer frames
-
-                BackRightWheel.motorTorque = 0.0f;
-                BackRightWheel.brakeTorque = brakeIntensity * Time.deltaTime * inputManager.throttle;// / GearRatio[CurrentGear]; //multiply by time to account for faster computer frames
-
-                //FrontLeftWheel.motorTorque = 0.0f;
-                FrontLeftWheel.brakeTorque = brakeIntensity * Time.deltaTime * inputManager.throttle;// / GearRatio[CurrentGear]; //multiply by time to account for faster computer frames
-
-                //FrontRightWheel.motorTorque = 0.0f;
-                FrontRightWheel.brakeTorque = brakeIntensity * Time.deltaTime * inputManager.throttle;// / GearRatio[CurrentGear]; //multiply by time to account for faster computer frames
-            }else{
-                BackLeftWheel.motorTorque = strengthCoeffiecient * Time.deltaTime * inputManager.throttle;
-                BackLeftWheel.brakeTorque = 0.0f;
-
-                BackRightWheel.motorTorque = strengthCoeffiecient * Time.deltaTime * inputManager.throttle;
-                BackRightWheel.brakeTorque = 0.0f;
-
-                FrontLeftWheel.brakeTorque = 0.0f;
-                FrontRightWheel.brakeTorque = 0.0f;
-            }
-            */
-        Steering();
-
-        /*  //front wheel steering
-          FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
-          FrontLeftWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
-
-          FrontRightWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
-          FrontRightWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);*/
-
-        foreach (GameObject mesh in meshes)
-        {
-            mesh.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).z >= 0 ? -1 : 1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
-        }
-
-        //rigidB.AddForceAtPosition(-transform.up * rigidB.velocity.sqrMagnitude, transform.position);
-        rigidB.AddForce(-transform.up * downForce * rigidB.velocity.magnitude);
     }
 
-
-        /*
-
-        foreach (WheelCollider wheel in throttleWheels)
+    private void torqueCalculation()
+    {
+        //calculate new torque value
+        if (engineRPM < MaxEngineRPM && (currentGear == 0 && carSpeed < reverseGearMaxSpeed))
         {
-            if (inputManager.brake)
-            {
-                wheel.motorTorque = 0f;
-                wheel.brakeTorque = brakeIntensity * Time.deltaTime; //multiply by time to account for faster computer frames
-            }
-            else
-            {
-                wheel.motorTorque = strengthCoeffiecient * Time.deltaTime * inputManager.throttle;
-                wheel.brakeTorque = 0f;
-            }
+            newTorque = torque * GearRatio[currentGear] * finalDriveRatio * engineEfficiency[index];
         }
-        
-        foreach (GameObject wheel in steeringWheels)
+        else if (engineRPM < MaxEngineRPM && ((currentGear == 1 && carSpeed < firstGearMaxSpeed) || (currentGear == 2 && carSpeed < secondGearMaxSpeed) ||
+           (currentGear == 3 && carSpeed < thirdGearMaxSpeed) || (currentGear == 4 && carSpeed < fourthGearMaxSpeed) || (currentGear == 5 && carSpeed < fifthGearMaxSpeed)))
         {
-            wheel.GetComponent<WheelCollider>().steerAngle = maxTurn * inputManager.steering;
-            wheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxTurn, 0f);
+            newTorque = torque * GearRatio[currentGear] * finalDriveRatio * engineEfficiency[index];
         }
-
-        foreach (GameObject mesh in meshes)
+        else
         {
-            mesh.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).z >= 0 ? -1 : 1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
-        }*/
-
-        private float wheelBaseLength = 2.4f;
-        private float rearTrackSize = 1.35f;
-        private float turnRadius = 10f;
-        private float maxWheelTurn = 20f;
-
-        private void Steering()
-        {
-            if(inputManager.steering > 0)
-            {
-                FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius + (rearTrackSize / 2))) * inputManager.steering ;
-                FrontRightWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius - (rearTrackSize / 2))) * inputManager.steering;
-            } else if(inputManager.steering < 0)
-            {
-                FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius - (rearTrackSize / 2))) * inputManager.steering;
-                FrontRightWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius + (rearTrackSize / 2))) * inputManager.steering;
-            } else
-            {
-                FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = 0;
-                FrontRightWheel.GetComponent<WheelCollider>().steerAngle = 0;
-            }
-
-            //Wheel movement left to right
-            FrontLeftWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
-            FrontRightWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
+            newTorque = 0.0f;
         }
+    }
 }
