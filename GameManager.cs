@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public GameObject rpmNeedle;
+    public GameObject tacho;
     public CarControl carControl;
 
     private float minRPMPosition = -533f;
@@ -41,6 +42,7 @@ public class GameManager : MonoBehaviour
         {
             transmissionIndicatorText.text = "M";
         }
+
     }
 
     public void gearChange()

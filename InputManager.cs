@@ -17,7 +17,6 @@ public class InputManager : MonoBehaviour
     public bool carReset;//reset the car in case it rolls over
 
     // Update is called once per frame
-
     void Update()
     {
         throttle = Input.GetAxis("Vertical");

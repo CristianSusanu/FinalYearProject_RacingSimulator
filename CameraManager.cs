@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public Transform car;
-    public float cameraDistance = 4.0f;
-    public float cameraHeight = 2f;
+    public float cameraDistance = 3.5f;
+    public float cameraHeight = 1.8f;
     public float cameraDamping = 2.0f;
 
     public float lookAtHeight = 0.0f;
@@ -45,6 +45,9 @@ public class CameraManager : MonoBehaviour
 
     private int cameraMode = 0;
 
+    public GameManager gameMan;
+    public Canvas canvas;
+
     void Start()
     {
         lookAtVector = new Vector3(0, lookAtHeight, 0);
@@ -65,6 +68,9 @@ public class CameraManager : MonoBehaviour
                 //transform.position = Vector3.Lerp(transform.position, car.transform.position + car.transform.TransformDirection(new Vector3(distance2, driverViewHeight, length2)), dampening * Time.deltaTime);
                 transform.rotation = car.transform.rotation;
                 Camera.main.fieldOfView = 55f;
+
+                displaySupplementaryTacho(false);
+
                 break;
             //bonet view
             case 2:
@@ -72,6 +78,9 @@ public class CameraManager : MonoBehaviour
                 //transform.position = Vector3.Lerp(transform.position, car.transform.position + car.transform.TransformDirection(new Vector3(0f, bonetViewHeight, bonetHeight)), dampening * Time.deltaTime);
                 transform.rotation = car.transform.rotation;
                 Camera.main.fieldOfView = 65f;
+
+                displaySupplementaryTacho(true);
+
                 break;
             //behind the car view
             default:
@@ -95,8 +104,21 @@ public class CameraManager : MonoBehaviour
                 transform.position = wantedPosition;
 
                 transform.LookAt(car.position + lookAtVector);
+
+                displaySupplementaryTacho(true);
+
                 break;
         }
+    }
+    //helper function to hide tacho when using in-car view
+    void displaySupplementaryTacho(bool temp)
+    {
+        gameMan.gearIndicatorText.enabled = temp;
+        gameMan.transmissionIndicatorText.enabled = temp;
+        gameMan.RPMIndicator.enabled = temp;
+        gameMan.speedText.enabled = temp;
+        gameMan.rpmNeedle.SetActive(temp);
+        gameMan.tacho.SetActive(temp);
     }
 
     /*

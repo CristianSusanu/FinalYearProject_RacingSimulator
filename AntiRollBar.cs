@@ -4,47 +4,76 @@ using UnityEngine;
 
 public class AntiRollBar : MonoBehaviour
 {
-    public WheelCollider WheelL;
-    public WheelCollider WheelR;
-    private Rigidbody carRigidBody;
+    public WheelCollider FrontLeftWheel;
+    public WheelCollider FrontRightWheel;
+    public WheelCollider BackLeftWheel;
+    public WheelCollider BackRightWheel;
+    private Rigidbody car;
 
-    public float AntiRoll = 5000.0f;
+    private float frontAxleAntiRoll = 300.0f;
+    private float rearAxleAntiRoll = 450.0f;
 
     void Start()
     {
-        carRigidBody = GetComponent<Rigidbody>();
+        car = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
     {
         WheelHit hit = new WheelHit();
-        float travelL = 1.5f;
-        float travelR = 1.5f;
+        float travelFrontWheelLeft = 1.0f;
+        float travelFrontWheelRight = 1.0f;
 
-        bool groundedL = WheelL.GetGroundHit(out hit);
+        //front axle
+        //determine if the wheels are grounded
+        bool groundedFrontLeft = FrontLeftWheel.GetGroundHit(out hit);
+        bool groundedFrontRight = FrontRightWheel.GetGroundHit(out hit);
 
-        if (groundedL)
+        //calculate suspension travel on left wheel
+        if (groundedFrontLeft)
         {
-            travelL = (-WheelL.transform.InverseTransformPoint(hit.point).y
-                    - WheelL.radius) / WheelL.suspensionDistance;
+            travelFrontWheelLeft = (-FrontLeftWheel.transform.InverseTransformPoint(hit.point).y - FrontLeftWheel.radius) / FrontLeftWheel.suspensionDistance;
         }
 
-        bool groundedR = WheelR.GetGroundHit(out hit);
-
-        if (groundedR)
+        //calculate suspension travel on right wheel
+        if (groundedFrontRight)
         {
-            travelR = (-WheelR.transform.InverseTransformPoint(hit.point).y
-                    - WheelR.radius) / WheelR.suspensionDistance;
+            travelFrontWheelRight = (-FrontRightWheel.transform.InverseTransformPoint(hit.point).y - FrontRightWheel.radius) / FrontRightWheel.suspensionDistance;
         }
 
-        var antiRollForce = (travelL - travelR) * AntiRoll;
+        var FrontAxleAntiRollForce = (travelFrontWheelLeft - travelFrontWheelRight) * frontAxleAntiRoll;
 
-        if (groundedL)
-            carRigidBody.AddForceAtPosition(WheelL.transform.up * -antiRollForce,
-                WheelL.transform.position);
-        if (groundedR)
-            carRigidBody.AddForceAtPosition(WheelR.transform.up * antiRollForce,
-                WheelR.transform.position);
+        if (groundedFrontLeft)
+            car.AddForceAtPosition(FrontLeftWheel.transform.up * -FrontAxleAntiRollForce, FrontLeftWheel.transform.position);
+        if (groundedFrontRight)
+            car.AddForceAtPosition(FrontRightWheel.transform.up * FrontAxleAntiRollForce, FrontRightWheel.transform.position);
+
+        //rear axle
+        float travelBackWheelLeft = 1.0f;
+        float travelBackWheelRight = 1.0f;
+
+        //determine if the wheels are grounded
+        bool groundedBackLeft = BackLeftWheel.GetGroundHit(out hit);
+        bool groundedBackRight = BackRightWheel.GetGroundHit(out hit);
+
+        //calculate suspension travel on left wheel
+        if (groundedBackLeft)
+        {
+            travelBackWheelLeft = (-BackLeftWheel.transform.InverseTransformPoint(hit.point).y - BackLeftWheel.radius) / BackLeftWheel.suspensionDistance;
+        }
+
+        //calculate suspension travel on right wheel
+        if (groundedBackRight)
+        {
+            travelBackWheelRight = (-BackRightWheel.transform.InverseTransformPoint(hit.point).y - BackRightWheel.radius) / BackRightWheel.suspensionDistance;
+        }
+
+        var antiRollForce = (travelBackWheelLeft - travelBackWheelRight) * rearAxleAntiRoll;
+
+        if (groundedBackLeft)
+            car.AddForceAtPosition(BackLeftWheel.transform.up* -antiRollForce, BackLeftWheel.transform.position);
+        if (groundedBackRight)
+            car.AddForceAtPosition(BackRightWheel.transform.up* antiRollForce, BackRightWheel.transform.position);
     }
 
 }

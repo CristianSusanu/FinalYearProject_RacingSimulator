@@ -61,14 +61,14 @@ public class CarControl : MonoBehaviour
     public List<GameObject> signalLights;
 
     //public float strengthCoeffiecient = 30000f;
-    private float brakeIntensity = 10000f;
+    private float brakeIntensity = 9500f;
 
     private float downForce = 50.0f;
 
     public Rigidbody rigidB;
 
     float gearShiftDelay = 0.0f;
-    private float torque = 15000f;
+    private float torque = 20000f;
     private float newTorque = 0.0f;
 
     public void ShiftUp()
@@ -109,7 +109,7 @@ public class CarControl : MonoBehaviour
     void Start()
     {
         inputManager = GetComponent<InputManager>();
-        rigidB.centerOfMass = new Vector3(0.0f, 0.25f, 0.0f);
+        rigidB.centerOfMass = new Vector3(0.0f, 0.2f, 0.0f);
     }
 
     void Update()
@@ -133,6 +133,7 @@ public class CarControl : MonoBehaviour
         {
             sLight.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
         }
+
         if (inputManager.transmission && autoTransmission)
         {
             autoTransmission = false;
@@ -231,8 +232,7 @@ public class CarControl : MonoBehaviour
             FrontRightWheel.brakeTorque = 0.0f;
         }*/
 
-        Debug.Log("Current Gear:" + currentGear);
-        Debug.Log("index: " + index);
+        //Debug.Log("ABS: " + absSelected);
 
         /*  //front wheel steering
           FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
@@ -309,13 +309,18 @@ public class CarControl : MonoBehaviour
         if (inputManager.brake)
         {
             BackLeftWheel.motorTorque = 0.0f;
-            BackLeftWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+            BackLeftWheel.brakeTorque = brakeIntensity;
+            absApply(BackLeftWheel);
 
             BackRightWheel.motorTorque = 0.0f;
-            BackRightWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+            BackRightWheel.brakeTorque = brakeIntensity;
+            absApply(BackRightWheel);
 
-            FrontLeftWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
-            FrontRightWheel.brakeTorque = brakeIntensity;//multiply by time to account for faster computer frames
+            FrontLeftWheel.brakeTorque = brakeIntensity;
+            absApply(FrontLeftWheel);
+
+            FrontRightWheel.brakeTorque = brakeIntensity;
+            absApply(FrontRightWheel);
         }
         else
         {
@@ -345,6 +350,19 @@ public class CarControl : MonoBehaviour
         else
         {
             newTorque = 0.0f;
+        }
+    }
+
+    //use anti brake lock system to prevent the wheels from locking
+    private void absApply(WheelCollider wheel)
+    {
+        if (wheel.brakeTorque >= 0.1f)
+        {
+            wheel.brakeTorque -= 0.1f * brakeIntensity;
+        }
+        else
+        {
+            wheel.brakeTorque = 0.0f;
         }
     }
 }
