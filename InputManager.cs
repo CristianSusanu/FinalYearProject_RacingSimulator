@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     public bool reverse;//car reverse
     public bool transmission;//switch between automatic and manual transmission
     public bool carReset;//reset the car in case it rolls over
+    public bool tractionControlToggle;//to turn the traction control on or off
 
     // Update is called once per frame
     void Update()
@@ -28,8 +29,10 @@ public class InputManager : MonoBehaviour
         li = Input.GetKeyDown(KeyCode.L);
         brake = Input.GetKey(KeyCode.Space);
         reverse = Input.GetKey(KeyCode.DownArrow);
-        //transmission = Input.GetKey(KeyCode.X);
         transmission = Input.GetKeyDown(KeyCode.X);
         carReset = Input.GetKeyDown(KeyCode.R);
+
+        tractionControlToggle = Input.GetKeyDown(KeyCode.T);
+        //tractionControlToggle = Input.GetKey(KeyCode.T);
     }
 }

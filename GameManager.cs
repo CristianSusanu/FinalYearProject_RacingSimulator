@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 {
     public GameObject rpmNeedle;
     public GameObject tacho;
+    public GameObject tractionCtrlIcon;
+
     public CarControl carControl;
 
     private float minRPMPosition = -533f;
@@ -41,6 +43,15 @@ public class GameManager : MonoBehaviour
         else
         {
             transmissionIndicatorText.text = "M";
+        }
+
+        if (carControl.tractionControlEngage)
+        {
+            tractionCtrlIcon.SetActive(false);
+        }
+        else
+        {
+            tractionCtrlIcon.SetActive(true);
         }
 
     }
