@@ -35,8 +35,8 @@ public class CameraManager : MonoBehaviour
     private float zVelocity = 0.0F;
 
     //first person view
-    public float driverViewHeight = 1.01f;
-    public float distance2 = -0.28f;
+    public float driverViewHeight = 0.985f;
+    public float distance2 = -0.06f;
     public float length2 = -0.33f;
 
     //bonet view
@@ -46,7 +46,6 @@ public class CameraManager : MonoBehaviour
     private int cameraMode = 0;
 
     public GameManager gameMan;
-    public Canvas canvas;
 
     void Start()
     {
@@ -67,7 +66,7 @@ public class CameraManager : MonoBehaviour
                 transform.position = car.transform.position + car.transform.TransformDirection(new Vector3(length2, driverViewHeight, distance2));
                 //transform.position = Vector3.Lerp(transform.position, car.transform.position + car.transform.TransformDirection(new Vector3(distance2, driverViewHeight, length2)), dampening * Time.deltaTime);
                 transform.rotation = car.transform.rotation;
-                Camera.main.fieldOfView = 55f;
+                Camera.main.fieldOfView = 70f;
 
                 displaySupplementaryTacho(false);
 

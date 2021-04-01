@@ -39,9 +39,11 @@ public class SpeedIndicator : MonoBehaviour
     public GameObject oilNeedle;
     public GameObject tempNeedle;
 
+    public Animator driverAnimation;
+    private float animatorTurnAngle;
+
     private void Update()
     {
-
         speed = car.velocity.magnitude * 3.6f;
         //RPM = minRPM + 2 * (30f * car.velocity.magnitude * 3.587f * 4.3f) / (3.6f * Mathf.PI * 0.3f); //multiplied by two ar this is the RPM for one wheen only
         RPM = carControl.engineRPM;
@@ -55,10 +57,15 @@ public class SpeedIndicator : MonoBehaviour
         {
             RPMNeedle.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minRPMArrowAngle + 18f, maxRPMArrowAngle, RPM / maxRPM));
         }
-
+        
         if(steeringWheel != null)
          {
-            steeringWheel.transform.localEulerAngles = Vector3.back * Mathf.Lerp((Input.GetAxis("Horizontal") * 150), 0f, 0f);
+            //steeringWheel.transform.localEulerAngles = Vector3.back * Mathf.Lerp((Input.GetAxis("Horizontal") * 150), 0f, 0f);
+
+            steeringWheel.transform.localEulerAngles = new Vector3(0f, 0f, -carControl.inputManager.steering * 80); //steering wheel rotation
+
+            animatorTurnAngle = Mathf.Lerp(animatorTurnAngle, -carControl.inputManager.steering, 30f * Time.deltaTime);
+            driverAnimation.SetFloat("turnAngle", animatorTurnAngle);
         }
 
         if (fuelNeedle != null && oilNeedle != null && tempNeedle != null)
