@@ -9,6 +9,7 @@ public class AntiRollBar : MonoBehaviour
     public WheelCollider BackLeftWheel;
     public WheelCollider BackRightWheel;
     private Rigidbody car;
+    public CarControl carControl;
 
     private float frontAxleAntiRoll = 300.0f;
     private float rearAxleAntiRoll = 450.0f;
@@ -28,7 +29,7 @@ public class AntiRollBar : MonoBehaviour
         //determine if the wheels are grounded
         bool groundedFrontLeft = FrontLeftWheel.GetGroundHit(out hit);
         bool groundedFrontRight = FrontRightWheel.GetGroundHit(out hit);
-
+     
         //calculate suspension travel on left wheel
         if (groundedFrontLeft)
         {
@@ -75,5 +76,4 @@ public class AntiRollBar : MonoBehaviour
         if (groundedBackRight)
             car.AddForceAtPosition(BackRightWheel.transform.up* antiRollForce, BackRightWheel.transform.position);
     }
-
 }

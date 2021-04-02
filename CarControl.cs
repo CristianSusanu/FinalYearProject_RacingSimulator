@@ -26,6 +26,7 @@ public class CarControl : MonoBehaviour
     public float engineRPM = 0.0f;
 
     public GameManager gameManager;
+    public SoundController soundController;
 
     //engine charateristics
     public float MaxEngineRPM = 9000.0f;
@@ -44,6 +45,8 @@ public class CarControl : MonoBehaviour
 
     float[] engineEfficiency = {0.5f, 0.52f, 0.54f, 0.56f, 0.58f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.7f, 0.72f, 0.74f, 0.76f, 0.78f, 0.8f, 0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f, 0.94f, 0.96f, 0.98f, 1.0f, 1.0f, 1.0f, 0.96f, 0.92f, 0.88f, 0.84f, 0.8f, 0.76f, 0.72f, 0.68f};
     float engineEfficiencyStep = 250.0f;
+
+    public Vector3 engineOrientation = Vector3.right;//to control the car body movement with the increase in RPM
 
     public bool autoTransmission = false;
     public bool tractionControlEngage = true;
@@ -85,6 +88,7 @@ public class CarControl : MonoBehaviour
         {
             currentGear++;
             gameManager.gearChange();
+            soundController.PlayGearShiftUp();
 
             //delay next shift with 1s
             gearShiftDelay = now + 1.0f;
@@ -102,6 +106,7 @@ public class CarControl : MonoBehaviour
         {
             currentGear--;
             gameManager.gearChange();
+            soundController.PlayGearShiftDown();
 
             //delay next shift with 0.1s
             gearShiftDelay = now + 0.1f;
@@ -112,6 +117,7 @@ public class CarControl : MonoBehaviour
     void Start()
     {
         inputManager = GetComponent<InputManager>();
+        soundController = GetComponent<SoundController>();
         rigidB.centerOfMass = new Vector3(0.0f, 0.2f, 0.0f);
     }
 

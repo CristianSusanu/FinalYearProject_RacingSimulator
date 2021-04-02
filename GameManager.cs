@@ -53,7 +53,6 @@ public class GameManager : MonoBehaviour
         {
             tractionCtrlIcon.SetActive(true);
         }
-
     }
 
     public void gearChange()
