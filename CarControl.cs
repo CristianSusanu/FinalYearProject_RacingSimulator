@@ -89,6 +89,7 @@ public class CarControl : MonoBehaviour
             currentGear++;
             gameManager.gearChange();
             soundController.PlayGearShiftUp();
+            soundController.PlayTurboWhistle();
 
             //delay next shift with 1s
             gearShiftDelay = now + 1.0f;

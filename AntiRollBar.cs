@@ -22,6 +22,7 @@ public class AntiRollBar : MonoBehaviour
     void FixedUpdate()
     {
         WheelHit hit = new WheelHit();
+
         float travelFrontWheelLeft = 1.0f;
         float travelFrontWheelRight = 1.0f;
 
