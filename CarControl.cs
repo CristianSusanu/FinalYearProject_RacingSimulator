@@ -369,8 +369,8 @@ public class CarControl : MonoBehaviour
 
     private WheelFrictionCurve sidewaysFriction;
     private WheelFrictionCurve forwardFriction;
-    private float tractionControlMultiplier = 2.0f;
-    private float tractionSlip;//driftfactor de la el
+    //private float tractionControlMultiplier = 2.0f;
+    //private float tractionSlip;//driftfactor de la el
     
     private void tractionControl()
     {
