@@ -229,7 +229,6 @@ public class CarControl : MonoBehaviour
         //calculate torque
         torqueCalculation();
 
-        //brakeAndAccelerate();
         brakeAndAccelerate();
         Steering();
 

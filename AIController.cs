@@ -12,7 +12,7 @@ public class AIController : MonoBehaviour
     public float turningSpeed = 5f;
     public float motorTorque = 25000f;
     private float carSpeed = 0f;
-    private float brakeIntensity = 150f;
+    private float brakeIntensity = 12f;
 
     //public WheelCollider FrontLeftWheel;
     //public WheelCollider FrontRightWheel;
@@ -57,6 +57,7 @@ public class AIController : MonoBehaviour
     void FixedUpdate()
     {
         Sensors();
+        CheckWheelSlip();
         Move();
         GetWayPointDistance();
         ApplySteer();
@@ -176,6 +177,28 @@ public class AIController : MonoBehaviour
             wheel.transform.localEulerAngles = new Vector3(0f, wheelAngle, 0f);//to turn the wheels
         }
         */
+    }
+
+    private void CheckWheelSlip()
+    {
+        foreach(WheelCollider wheel in wheels)
+        {
+            WheelHit hit = new WheelHit();
+
+            //determine if the wheel is grounded
+            bool grounded = wheel.GetGroundHit(out hit);
+            if (hit.sidewaysSlip < -0.2f)
+            {
+                brakesApplied = true;
+                //wheel.brakeTorque = 15f;
+                //CarBrake();
+            }
+            else
+            {
+                brakesApplied = false;
+                wheel.brakeTorque = 0f;
+            }
+        }
     }
 
     private void Move()
