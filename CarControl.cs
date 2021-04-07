@@ -241,11 +241,12 @@ public class CarControl : MonoBehaviour
 
           FrontRightWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
           FrontRightWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);*/
-
+        
         foreach (GameObject wheel in wheelMeshes)
         {
-            wheel.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).z >= 0 ? -1 : 1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
+            wheel.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).x >= 0 ? 1 : -1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
         }
+
 
         //rigidB.AddForceAtPosition(-transform.up * rigidB.velocity.sqrMagnitude, transform.position);
         rigidB.AddForce(-transform.up * downForce * rigidB.velocity.magnitude);
@@ -280,8 +281,8 @@ public class CarControl : MonoBehaviour
 
     private float wheelBaseLength = 2.4f;
     private float rearTrackSize = 1.35f;
-    private float turnRadius = 10f;
-    private float maxWheelTurn = 30f;
+    private float turnRadius = 15f;
+    private float maxWheelTurn = 20f;
 
     private void Steering()
     {

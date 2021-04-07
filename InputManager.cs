@@ -33,6 +33,5 @@ public class InputManager : MonoBehaviour
         carReset = Input.GetKeyDown(KeyCode.R);
 
         tractionControlToggle = Input.GetKeyDown(KeyCode.T);
-        //tractionControlToggle = Input.GetKey(KeyCode.T);
     }
 }

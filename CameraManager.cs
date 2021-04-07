@@ -69,6 +69,8 @@ public class CameraManager : MonoBehaviour
                 Camera.main.fieldOfView = 70f;
 
                 displaySupplementaryTacho(false);
+                gameMan.tractionCtrlIcon.SetActive(false);
+                displaySupplementaryInteriorInfo(true);
 
                 break;
             //bonet view
@@ -79,6 +81,8 @@ public class CameraManager : MonoBehaviour
                 Camera.main.fieldOfView = 65f;
 
                 displaySupplementaryTacho(true);
+                displaySupplementaryInteriorInfo(false);
+                gameMan.tractionCtrlInteriorIcon.SetActive(false);
 
                 break;
             //behind the car view
@@ -105,6 +109,8 @@ public class CameraManager : MonoBehaviour
                 transform.LookAt(car.position + lookAtVector);
 
                 displaySupplementaryTacho(true);
+                displaySupplementaryInteriorInfo(false);
+                gameMan.tractionCtrlInteriorIcon.SetActive(false);
 
                 break;
         }
@@ -119,7 +125,14 @@ public class CameraManager : MonoBehaviour
         gameMan.rpmNeedle.SetActive(temp);
         gameMan.tacho.SetActive(temp);
     }
-
+    
+    void displaySupplementaryInteriorInfo(bool temp)
+    {
+        gameMan.gearIndicatorInteriorText.enabled = temp;
+        gameMan.transmissionIndicatorInteriorText.enabled = temp;
+        gameMan.RPMIndicatorInterior.enabled = temp;
+        gameMan.speedTextInterior.enabled = temp;
+    }
     /*
     public GameObject car;
 
