@@ -18,7 +18,7 @@ public class SpeedIndicator : MonoBehaviour
 
     //for rpm count needle
     private float maxRPM = 9000f;
-    private float minRPM = 950f;
+    //private float minRPM = 950f;
     private float RPM = 0.0f;
     private float minRPMArrowAngle = -17f;
     private float maxRPMArrowAngle = -174;

@@ -9,7 +9,7 @@ public class AIController : MonoBehaviour
     private int nodeNumber = 0;
 
     private float steeringAngle = 30f;
-    private float turningSpeed = 0.1f;
+    //private float turningSpeed = 0.1f;
     public float motorTorque = 25000f;
     private float carSpeed = 0f;
     private float brakeIntensity = 12f;
@@ -37,10 +37,10 @@ public class AIController : MonoBehaviour
     private float[] GearRatio = new float[] { 3.437f, 3.626f, 2.188f, 1.541f, 1.213f, 1f, 0.76f }; //[R, 1, 2, 3, 4, 5, 6] 3.484f pt R 6MT Transmission
     private float finalDriveRatio = 4.1f;// this is multiplied with each gear ratio
     private int currentGear = 1;
-    private float engineRPM = 0f;
+    public float engineRPM = 0f;
 
     //engine characteristics
-    private float maxEngineRPM = 7000F;
+    public float maxEngineRPM = 7000F;
     private float MinEngineRPM = 950.0f;
     private float shiftUpRPM = 5500.0f;
     private float downShiftRPM = 3000.0f;

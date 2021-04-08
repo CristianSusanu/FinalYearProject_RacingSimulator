@@ -27,7 +27,7 @@ public class SoundController : MonoBehaviour
     AudioSource sidewaysSkidSource;
     AudioSource forwardSkidSource;
 
-    public AudioSource CreateAudio(AudioClip audio, string name)
+    private AudioSource CreateAudio(AudioClip audio, string name)
     {
         GameObject sound = new GameObject(name);
         sound.transform.parent = transform;
@@ -43,7 +43,7 @@ public class SoundController : MonoBehaviour
         return sound.GetComponent<AudioSource>();
     }
 
-    public AudioSource CreateGearShiftAudio(AudioClip audio, string name)
+    private AudioSource CreateGearShiftAudio(AudioClip audio, string name)
     {
         GameObject sound = new GameObject(name);
         sound.transform.parent = transform;
@@ -58,7 +58,7 @@ public class SoundController : MonoBehaviour
         return sound.GetComponent<AudioSource>();
     }
 
-    public AudioSource CreateTurboWhistleAudio(AudioClip audio)
+    private AudioSource CreateTurboWhistleAudio(AudioClip audio)
     {
         GameObject sound = new GameObject(name);
         sound.transform.parent = transform;
@@ -116,15 +116,8 @@ public class SoundController : MonoBehaviour
     {
         turboSoundSource.Play();
     }
-
-    public void BackFirePlay()
-    {
-        BackFireSource.Play();
-    }
-
-
-    // Update is called once per frame
-    void Update()
+    
+    private void PlayEngineSound()
     {
         if (carControl.inputManager.throttle == 0)
         {
@@ -141,16 +134,21 @@ public class SoundController : MonoBehaviour
             engineReverseSource.volume = 0.3f - 2.0f * carControl.inputManager.throttle;
             engineSource.volume = 0.0f;
         }
+    }
 
-        if (carControl.engineRPM > 7500f)
+    // Update is called once per frame
+    void Update()
+    {
+        PlayEngineSound();
+        SkidSound();
+
+        if (carControl.engineRPM > 7000f)
         {
             BackFireSource.Play();
         }
-
-        SkidSound();
     }
-
-    private void SkidSound()
+    
+    public void SkidSound()
     {
         //skid sound
         float skidAt = 150f;

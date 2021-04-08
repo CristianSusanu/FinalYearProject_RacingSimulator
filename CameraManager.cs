@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public Transform car;
+    public Camera rearViewCamera;
     public float cameraDistance = 3.5f;
     public float cameraHeight = 1.8f;
     public float cameraDamping = 2.0f;
