@@ -27,7 +27,7 @@ public class SoundController : MonoBehaviour
     AudioSource sidewaysSkidSource;
     AudioSource forwardSkidSource;
 
-    private AudioSource CreateAudio(AudioClip audio, string name)
+    public AudioSource CreateAudio(AudioClip audio, string name)
     {
         GameObject sound = new GameObject(name);
         sound.transform.parent = transform;
@@ -43,7 +43,7 @@ public class SoundController : MonoBehaviour
         return sound.GetComponent<AudioSource>();
     }
 
-    private AudioSource CreateGearShiftAudio(AudioClip audio, string name)
+    public AudioSource CreateGearShiftAudio(AudioClip audio, string name)
     {
         GameObject sound = new GameObject(name);
         sound.transform.parent = transform;
@@ -58,7 +58,7 @@ public class SoundController : MonoBehaviour
         return sound.GetComponent<AudioSource>();
     }
 
-    private AudioSource CreateTurboWhistleAudio(AudioClip audio)
+    public AudioSource CreateTurboWhistleAudio(AudioClip audio)
     {
         GameObject sound = new GameObject(name);
         sound.transform.parent = transform;
@@ -116,6 +116,12 @@ public class SoundController : MonoBehaviour
     {
         turboSoundSource.Play();
     }
+
+    public void BackFirePlay()
+    {
+        BackFireSource.Play();
+    }
+
 
     // Update is called once per frame
     void Update()

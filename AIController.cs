@@ -9,7 +9,7 @@ public class AIController : MonoBehaviour
     private int nodeNumber = 0;
 
     private float steeringAngle = 30f;
-    public float turningSpeed = 5f;
+    private float turningSpeed = 0.1f;
     public float motorTorque = 25000f;
     private float carSpeed = 0f;
     private float brakeIntensity = 12f;
@@ -23,10 +23,50 @@ public class AIController : MonoBehaviour
     public List<GameObject> steeringWheels;
 
     public GameObject brakeLight;
+    public GameObject reverseLight;
 
     public bool brakesApplied = false;
+    public bool reverseApply = false;
 
     public Rigidbody rigidB;
+
+    //for gearbox
+    public bool movingVehicle = false;
+
+    //The GT86 has a max engine RPM of 7000RPM
+    private float[] GearRatio = new float[] { 3.437f, 3.626f, 2.188f, 1.541f, 1.213f, 1f, 0.76f }; //[R, 1, 2, 3, 4, 5, 6] 3.484f pt R 6MT Transmission
+    private float finalDriveRatio = 4.1f;// this is multiplied with each gear ratio
+    private int currentGear = 1;
+    private float engineRPM = 0f;
+
+    //engine characteristics
+    private float maxEngineRPM = 7000F;
+    private float MinEngineRPM = 950.0f;
+    private float shiftUpRPM = 5500.0f;
+    private float downShiftRPM = 3000.0f;
+    private int index = 0;
+
+    float[] engineEfficiency = { 0.56f, 0.58f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.7f, 0.72f, 0.74f, 0.76f, 0.78f, 0.8f, 0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f, 0.94f, 0.96f, 0.98f, 1.0f, 1.0f, 0.96f, 0.92f, 0.88f, 0.84f };
+    float engineEfficiencyStep = 250.0f;
+
+    private float newTorque = 0.0f;
+
+    public void ShiftUp()
+    {
+        if ((currentGear > 0 && currentGear < GearRatio.Length - 1 && engineRPM > shiftUpRPM) || (currentGear == 0 && engineRPM < 1050f))
+        {
+            currentGear++;
+        }
+    }
+
+    public void ShiftDown()
+    {
+        if ((currentGear > 1) || (currentGear == 1 && engineRPM < 1050f))
+        {
+            currentGear--;
+        }
+    }
+    //gearbox until here
 
     [Header("Sensors")]
     public float sensorLen = 30f;
@@ -34,7 +74,7 @@ public class AIController : MonoBehaviour
     public float frontSideSensorPos = 0.75f;
     public float frontSensorAngled = 30f;
     private bool collision = false;//if anything is hit, this becomes true
-    private float objectSteeringAngle = 0f;
+    public float objectSteeringAngle = 0f;
 
     // Start is called before the first frame update
     void Start()
@@ -56,14 +96,50 @@ public class AIController : MonoBehaviour
 
     void FixedUpdate()
     {
+        engineRPM = MinEngineRPM + 2 * (30f * rigidB.velocity.magnitude * GearRatio[currentGear] * finalDriveRatio) / (3.6f * Mathf.PI * 0.3f);
+
+        //automatic shifting 
+        if (currentGear == 1 && reverseApply)
+        {
+            ShiftDown();//reverse
+        }
+        else if (currentGear == 0 && movingVehicle)
+        {
+            ShiftUp();//to change from reverse to drive
+        }
+        else if (movingVehicle && engineRPM > shiftUpRPM)
+        {
+            ShiftUp();//shift up
+        }
+        else if (engineRPM < downShiftRPM && currentGear > 1)
+        {
+            ShiftDown();//down shift
+        }
+
+        index = (int)(engineRPM / engineEfficiencyStep);
+        if (index >= engineEfficiency.Length)
+        {
+            index = engineEfficiency.Length - 1;
+        }
+        if (index < 0)
+        {
+            index = 0;
+        }
+
+        newTorque = motorTorque * GearRatio[currentGear] * finalDriveRatio * engineEfficiency[index];
+
+        GetWayPointDistance();
         Sensors();
         CheckWheelSlip();
         Move();
-        GetWayPointDistance();
         ApplySteer();
         WheelRotation();
         CarBrake();
         LerpedSteerAngles();
+        Reverse();
+
+        Debug.Log("AI Current Gear: " + currentGear);
+        Debug.Log("AI Car Speed: " + carSpeed);
     }
 
     private void Sensors()
@@ -133,7 +209,7 @@ public class AIController : MonoBehaviour
         }
 
         //front center sensor
-        if(collisionMultiplicator == 0)
+        if (collisionMultiplicator == 0)
         {
             if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
             {
@@ -154,13 +230,34 @@ public class AIController : MonoBehaviour
                 }
             }
         }
-
-        //check if there's an obstacle to avoid
-        if (collision)
+        
+        if (carSpeed < 30f && (collisionMultiplicator == 1f || collisionMultiplicator == -1f))
         {
-            objectSteeringAngle = steeringAngle * collisionMultiplicator;
+            if(collisionMultiplicator == 1f)
+            {
+                wheels[2].motorTorque = -0.4f * motorTorque;
+                wheels[3].motorTorque = -0.2f * motorTorque;
+                reverseApply = true;
+            } else if (collisionMultiplicator == -1f)
+            {
+                wheels[2].motorTorque = -0.2f * motorTorque;
+                wheels[3].motorTorque = -0.4f * motorTorque;
+                reverseApply = true;
+            }
         }
+        else
+        {
+            wheels[2].motorTorque = motorTorque;
+            wheels[3].motorTorque = motorTorque;
+            reverseApply = false;
+        }
+
+    //check if there's an obstacle to avoid
+    if (collision)
+    {
+        objectSteeringAngle = steeringAngle * collisionMultiplicator;
     }
+}
 
     float wheelAngle = 0f;
     private void ApplySteer()
@@ -187,40 +284,31 @@ public class AIController : MonoBehaviour
 
             //determine if the wheel is grounded
             bool grounded = wheel.GetGroundHit(out hit);
-            if (hit.sidewaysSlip < -0.2f)
-            {
-                brakesApplied = true;
-                //wheel.brakeTorque = 15f;
-                //CarBrake();
-            }
-            else
-            {
-                brakesApplied = false;
-                wheel.brakeTorque = 0f;
-            }
+            brakesApplied = hit.sidewaysSlip < -0.2f ? true : false;
         }
     }
 
     private void Move()
     {
         float maxSpeed = 240f;
+        movingVehicle = true;
 
         carSpeed = 3.6f * rigidB.velocity.magnitude;
-        
+
         if(carSpeed < maxSpeed && !brakesApplied)
-        {
-            for (int i = 2; i < 3; i++)
-            {
-                wheels[i].motorTorque = motorTorque;
-            }
-        }
-        else
-        {
-            for (int i = 2; i < 3; i++)
-            {
-                wheels[i].motorTorque = 0;
-            }
-        }
+         {
+             for (int i = 2; i < 3; i++)
+             {
+                 wheels[i].motorTorque = newTorque;
+             }
+         }
+         else
+         {
+             for (int i = 2; i < 3; i++)
+             {
+                 wheels[i].motorTorque = 0;
+             }
+         }
     }
 
     private void GetWayPointDistance()
@@ -270,6 +358,18 @@ public class AIController : MonoBehaviour
             wheel.GetComponent<WheelCollider>().steerAngle = objectSteeringAngle;
             //wheel.transform.localEulerAngles = new Vector3(0f, objectSteeringAngle, 0f);//to turn the wheels
             //wheel.transform.localEulerAngles = new Vector3(0f, Mathf.Lerp(wheel.GetComponent<WheelCollider>().steerAngle, objectSteeringAngle, Time.deltaTime * turningSpeed), 0f);//to turn the wheels
+        }
+    }
+
+    private void Reverse()
+    {
+        if (reverseApply)
+        {
+            reverseLight.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.white);
+        }
+        else
+        {
+            reverseLight.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.black);
         }
     }
 }

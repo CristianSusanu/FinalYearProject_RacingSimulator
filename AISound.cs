@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TractionControl : MonoBehaviour
+public class AISound : MonoBehaviour
 {
+    public SoundController soundController;
+
     // Start is called before the first frame update
     void Start()
     {

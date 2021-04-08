@@ -407,11 +407,11 @@ public class CarControl : MonoBehaviour
         {
             forwardFriction = wheels[0].forwardFriction;
             sidewaysFriction = wheels[0].sidewaysFriction;
-
+            
             foreach (WheelCollider wheel in wheels)
             {
                 forwardFriction.extremumSlip = forwardFriction.extremumValue = forwardFriction.asymptoteSlip = forwardFriction.asymptoteValue = 1.0f;
-                forwardFriction.stiffness = 2.0f;
+                forwardFriction.stiffness = 2.5f;
                 sidewaysFriction.extremumSlip = sidewaysFriction.extremumValue = sidewaysFriction.asymptoteSlip = sidewaysFriction.asymptoteValue = 2.0f;
                 sidewaysFriction.stiffness = 8.0f;
 

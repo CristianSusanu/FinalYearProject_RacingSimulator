@@ -9,7 +9,7 @@ public class AntiRollBar : MonoBehaviour
     public WheelCollider BackLeftWheel;
     public WheelCollider BackRightWheel;
     private Rigidbody car;
-    public CarControl carControl;
+    //public CarControl carControl;
 
     private float frontAxleAntiRoll = 300.0f;
     private float rearAxleAntiRoll = 450.0f;
