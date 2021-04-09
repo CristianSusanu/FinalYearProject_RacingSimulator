@@ -5,6 +5,7 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     public Transform path;
+
     private List<Transform> nodes;
     private int nodeNumber = 0;
 
@@ -137,9 +138,6 @@ public class AIController : MonoBehaviour
         CarBrake();
         LerpedSteerAngles();
         Reverse();
-
-        Debug.Log("AI Current Gear: " + currentGear);
-        Debug.Log("AI Car Speed: " + carSpeed);
     }
 
     private void Sensors()
@@ -235,13 +233,13 @@ public class AIController : MonoBehaviour
         {
             if(collisionMultiplicator == 1f)
             {
-                wheels[2].motorTorque = -0.4f * motorTorque;
-                wheels[3].motorTorque = -0.2f * motorTorque;
+                wheels[2].motorTorque = -0.7f * motorTorque;
+                wheels[3].motorTorque = -0.5f * motorTorque;
                 reverseApply = true;
             } else if (collisionMultiplicator == -1f)
             {
-                wheels[2].motorTorque = -0.2f * motorTorque;
-                wheels[3].motorTorque = -0.4f * motorTorque;
+                wheels[2].motorTorque = -0.5f * motorTorque;
+                wheels[3].motorTorque = -0.7f * motorTorque;
                 reverseApply = true;
             }
         }
@@ -252,12 +250,12 @@ public class AIController : MonoBehaviour
             reverseApply = false;
         }
 
-    //check if there's an obstacle to avoid
-    if (collision)
-    {
-        objectSteeringAngle = steeringAngle * collisionMultiplicator;
+        //check if there's an obstacle to avoid
+        if (collision)
+        {
+            objectSteeringAngle = steeringAngle * collisionMultiplicator;
+        }
     }
-}
 
     float wheelAngle = 0f;
     private void ApplySteer()
@@ -313,7 +311,7 @@ public class AIController : MonoBehaviour
 
     private void GetWayPointDistance()
     {
-        if (Vector3.Distance(transform.position, nodes[nodeNumber].position) < 0.5f)
+        if (Vector3.Distance(transform.position, nodes[nodeNumber].position) < 0.5f)//transform.pos is the current pos, urmatoarea e node pos
         {
             if(nodeNumber == nodes.Count - 1)
             {

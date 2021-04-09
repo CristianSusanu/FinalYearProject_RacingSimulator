@@ -8,8 +8,8 @@ public class AIPath : MonoBehaviour
 
     private List<Transform> nodes = new List<Transform>();//only contains the child nodes, not itself
 
-    //private void OnDrawGizmosSelected()//the function will be executed only when the game object is selected
-    private void OnDrawGizmos()//schimb cu cea de sus cand termin, ca sa apara pathul doar cand selected
+    private void OnDrawGizmosSelected()//the function will be executed only when the game object is selected
+    //private void OnDrawGizmos()//schimb cu cea de sus cand termin, ca sa apara pathul doar cand selected
     {
         Gizmos.color = lineCol;
 
@@ -17,8 +17,8 @@ public class AIPath : MonoBehaviour
 
         nodes = new List<Transform>();//to make sure the list is empty at the beginning
 
-        //for(int i = 0; i < pathTransform.Length; i++)
-        for (int i = 1; i < pathTransform.Length; i++)
+        for(int i = 0; i < pathTransform.Length; i++)
+        //for (int i = 1; i < pathTransform.Length; i++)
         {
             if(pathTransform[i] != transform)
             {
