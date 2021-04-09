@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public GameObject rpmNeedle;
+    public GameObject interiorGauges;
     public GameObject tacho;
     public GameObject tractionCtrlIcon;
     public GameObject tractionCtrlInteriorIcon;

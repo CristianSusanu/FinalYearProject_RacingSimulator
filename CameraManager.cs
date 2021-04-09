@@ -5,7 +5,14 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public Transform car;
-    public Camera rearViewCamera;
+    public GameObject rearViewCamera;
+    public GameObject rearViewCameraImage;
+    public GameObject rearViewCentralCamera;
+    public GameObject rearViewCentralImage;
+    public GameObject rearViewCameraOutside;
+    public GameObject rearViewCameraOutsideImage;
+    public GameObject rearViewCameraOutsideBorder;
+
     public float cameraDistance = 3.5f;
     public float cameraHeight = 1.8f;
     public float cameraDamping = 2.0f;
@@ -38,7 +45,7 @@ public class CameraManager : MonoBehaviour
     //first person view
     public float driverViewHeight = 0.985f;
     public float distance2 = -0.06f;
-    public float length2 = -0.33f;
+    public float length2 = -0.3f;
 
     //bonet view
     public float bonetViewHeight = 1.3f;
@@ -51,13 +58,37 @@ public class CameraManager : MonoBehaviour
     void Start()
     {
         lookAtVector = new Vector3(0, lookAtHeight, 0);
+
+        rearViewCameraOutside.SetActive(false);
+        rearViewCameraOutsideImage.SetActive(false);
+        rearViewCameraOutsideBorder.SetActive(false);
     }
 
     void LateUpdate()
     {
+        //diplay central mirror only when V is pressed
+        if (Input.GetKeyDown(KeyCode.V))
+        {
+            DisplayCentralOutsideMirror(true);
+        }
+        else if (Input.GetKeyUp(KeyCode.V))
+        {
+            DisplayCentralOutsideMirror(false);
+        }
+
+        //display the central mirror when car is reversing
+        if (Input.GetKeyDown(KeyCode.DownArrow) && parentRigidbody.velocity.magnitude * 3.6f < 25f)
+        {
+            DisplayCentralOutsideMirror(true);
+        }
+        else if (Input.GetKeyUp(KeyCode.DownArrow))
+        {
+            DisplayCentralOutsideMirror(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.C))
         {
-            cameraMode = (cameraMode + 1) % 3; //where 2 is the number of cameras in use
+            cameraMode = (cameraMode + 1) % 3; //where 3 is the number of cameras in use
         }
 
         switch (cameraMode)
@@ -67,11 +98,13 @@ public class CameraManager : MonoBehaviour
                 transform.position = car.transform.position + car.transform.TransformDirection(new Vector3(length2, driverViewHeight, distance2));
                 //transform.position = Vector3.Lerp(transform.position, car.transform.position + car.transform.TransformDirection(new Vector3(distance2, driverViewHeight, length2)), dampening * Time.deltaTime);
                 transform.rotation = car.transform.rotation;
-                Camera.main.fieldOfView = 70f;
+                Camera.main.fieldOfView = 75f;
 
                 displaySupplementaryTacho(false);
                 gameMan.tractionCtrlIcon.SetActive(false);
                 displaySupplementaryInteriorInfo(true);
+                DisplayMirrorImage(true);
+                DisplayCentralOutsideMirror(false);
 
                 break;
             //bonet view
@@ -84,6 +117,7 @@ public class CameraManager : MonoBehaviour
                 displaySupplementaryTacho(true);
                 displaySupplementaryInteriorInfo(false);
                 gameMan.tractionCtrlInteriorIcon.SetActive(false);
+                DisplayMirrorImage(false);
 
                 break;
             //behind the car view
@@ -109,13 +143,17 @@ public class CameraManager : MonoBehaviour
 
                 transform.LookAt(car.position + lookAtVector);
 
+                Camera.main.fieldOfView = 60f;
+
                 displaySupplementaryTacho(true);
                 displaySupplementaryInteriorInfo(false);
                 gameMan.tractionCtrlInteriorIcon.SetActive(false);
+                DisplayMirrorImage(false);
 
                 break;
         }
     }
+
     //helper function to hide tacho when using in-car view
     void displaySupplementaryTacho(bool temp)
     {
@@ -126,14 +164,35 @@ public class CameraManager : MonoBehaviour
         gameMan.rpmNeedle.SetActive(temp);
         gameMan.tacho.SetActive(temp);
     }
-    
+
     void displaySupplementaryInteriorInfo(bool temp)
     {
         gameMan.gearIndicatorInteriorText.enabled = temp;
         gameMan.transmissionIndicatorInteriorText.enabled = temp;
         gameMan.RPMIndicatorInterior.enabled = temp;
         gameMan.speedTextInterior.enabled = temp;
+        gameMan.interiorGauges.SetActive(temp);
     }
+
+    void DisplayMirrorImage(bool temp)
+    {
+        //left mirror
+        rearViewCamera.SetActive(temp);
+        rearViewCameraImage.SetActive(temp);
+
+        //interior central mirror
+        rearViewCentralCamera.SetActive(temp);
+        rearViewCentralImage.SetActive(temp);
+    }
+
+    //diplay function for central outside mirror
+    void DisplayCentralOutsideMirror(bool temp)
+    {
+        rearViewCameraOutside.SetActive(temp);
+        rearViewCameraOutsideImage.SetActive(temp);
+        rearViewCameraOutsideBorder.SetActive(temp);
+    }
+}
     /*
     public GameObject car;
 
@@ -186,4 +245,4 @@ public class CameraManager : MonoBehaviour
                 break;
         }
     }*/
-}
+
