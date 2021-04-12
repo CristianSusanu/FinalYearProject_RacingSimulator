@@ -3,7 +3,23 @@ guid: 21b47b9971b5c2a4da26fe5c6903b35f
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - rpmNeedle: {instanceID: 0}
+  - interiorGauges: {instanceID: 0}
+  - tacho: {instanceID: 0}
+  - tractionCtrlIcon: {instanceID: 0}
+  - tractionCtrlInteriorIcon: {instanceID: 0}
+  - carControl: {instanceID: 0}
+  - speedText: {instanceID: 0}
+  - speedTextInterior: {instanceID: 0}
+  - RPMIndicator: {instanceID: 0}
+  - RPMIndicatorInterior: {instanceID: 0}
+  - gearIndicatorText: {instanceID: 0}
+  - gearIndicatorInteriorText: {instanceID: 0}
+  - transmissionIndicatorText: {instanceID: 0}
+  - transmissionIndicatorInteriorText: {instanceID: 0}
+  - carList: {fileID: 6476520894426878226, guid: d1cb6a0df3ad35e44ab5b9f3faa5aa76,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

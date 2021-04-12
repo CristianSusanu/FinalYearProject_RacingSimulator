@@ -27,11 +27,55 @@ public class GameManager : MonoBehaviour
     public Text transmissionIndicatorText;
     public Text transmissionIndicatorInteriorText;
 
+    public GameObject raceStartCounter;
+    public GameObject lapTimer;
+    public AudioSource getReady;
+    public AudioSource go;
+
+    //public CarSelectorList carList;
+    //public GameObject startPos;
+
     private float speed = 0.0f;
+
+    private void Start()
+    {
+        StartCoroutine(StartCounter());
+    }
+
+    IEnumerator StartCounter()
+    {
+        yield return new WaitForSeconds(0.5f);//to wait for half a second
+        raceStartCounter.GetComponent<Text>().text = "3";
+        getReady.Play();
+        raceStartCounter.SetActive(true);
+        yield return new WaitForSeconds(1);//wait for a second as the animation takes a second
+        raceStartCounter.SetActive(false);
+
+        raceStartCounter.GetComponent<Text>().text = "2";
+        getReady.Play();
+        raceStartCounter.SetActive(true);
+        yield return new WaitForSeconds(1);
+        raceStartCounter.SetActive(false);
+
+        raceStartCounter.GetComponent<Text>().text = "1";
+        getReady.Play();
+        raceStartCounter.SetActive(true);
+        yield return new WaitForSeconds(1);
+        raceStartCounter.SetActive(false);
+
+        go.Play();
+        lapTimer.SetActive(true);
+    }
+
+    private void Awake()
+    {
+        //Instantiate(carList.cars[PlayerPrefs.GetInt("pointer")], startPos.transform.position, startPos.transform.rotation);
+        //carControl = GameObject.FindGameObjectWithTag("Player").GetComponent<CarControl>();
+    }
 
     void FixedUpdate()
     {
-        // Speed display in kmh
+        // Speed display in kmh 
         speed = carControl.rigidB.velocity.magnitude * 3.6f;
         speedText.text = speedTextInterior.text = ((int)speed).ToString() + "Km/h";
 

@@ -6,7 +6,7 @@ public class LightningManager : MonoBehaviour
 {
     public List<Light> lights;
     public List<GameObject> tailLight;
-    public GameObject dashboard;
+    public List<GameObject> dashboard;
     public GameObject leftHeadLight;
     public GameObject rightHeadLight;
 
@@ -37,13 +37,16 @@ public class LightningManager : MonoBehaviour
             }
         }
 
-        if(dashboard.GetComponent<Renderer>().material.GetColor("_EmissionColor") == Color.white)
+        foreach(GameObject dash in dashboard)
         {
-            dashboard.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.grey);
-        }
-        else
-        {
-            dashboard.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.white);
+            if (dash.GetComponent<Renderer>().material.GetColor("_EmissionColor") == Color.white)
+            {
+                dash.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.grey);
+            }
+            else
+            {
+                dash.GetComponent<Renderer>().material.SetColor("_EmissionColor", Color.white);
+            }
         }
 
         foreach (GameObject tLight in tailLight)

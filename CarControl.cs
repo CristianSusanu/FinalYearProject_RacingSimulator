@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(InputManager))]
 [RequireComponent(typeof(Rigidbody))]
@@ -174,6 +174,8 @@ public class CarControl : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (SceneManager.GetActiveScene().name == "CarSelectorScene") return;
+
         wheels.Add(FrontLeftWheel);
         wheels.Add(FrontRightWheel);
         wheels.Add(BackLeftWheel);
