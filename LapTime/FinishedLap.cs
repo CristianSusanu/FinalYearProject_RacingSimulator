@@ -11,18 +11,29 @@ public class FinishedLap : MonoBehaviour
     public GameObject min;
     public GameObject sec;
     public GameObject miliSec;
+    public GameObject finish;
 
-    public int minCount;
-    public int secCount;
-    public float miliSecCount;
-    public string milisecDispl;
+    //to count the number of laps
+    public GameObject lapCount;
+    public int numberOfCompletedLaps;
 
-    //public GameObject LapTimeImage;
+    public float rawTime;
 
-    private void OnTriggerEnter(Collider col)
+    private void Update()
     {
-        //if(col.tag == "Player")
-        //{
+        if(numberOfCompletedLaps == 1)
+        {
+            finish.SetActive(true);
+        }
+    }
+
+    void OnTriggerEnter()
+    {
+        numberOfCompletedLaps++;
+        rawTime = PlayerPrefs.GetFloat("RawTime");
+        //check if the currently set time is better than the saved one
+        if (LapTimeManager.rawTime <= rawTime)
+        {
             if (LapTimeManager.secCounter <= 9)
             {
                 sec.GetComponent<Text>().text = "0" + LapTimeManager.secCounter + ".";
@@ -41,19 +52,22 @@ public class FinishedLap : MonoBehaviour
                 min.GetComponent<Text>().text = "" + LapTimeManager.minCounter + ".";
             }
 
-            miliSec.GetComponent<Text>().text = "" + LapTimeManager.miliSecCounter;
+            miliSec.GetComponent<Text>().text = LapTimeManager.miliSecCounter.ToString("F0");
+        }
 
-            PlayerPrefs.SetInt("SavedMinutes", LapTimeManager.minCounter);
-            PlayerPrefs.SetInt("SavedSeconds", LapTimeManager.secCounter);
-            PlayerPrefs.SetFloat("SavedMilliseconds", LapTimeManager.miliSecCounter);
+        PlayerPrefs.SetInt("SavedMinutes", LapTimeManager.minCounter);
+        PlayerPrefs.SetInt("SavedSeconds", LapTimeManager.secCounter);
+        PlayerPrefs.SetFloat("SavedMilliseconds", LapTimeManager.miliSecCounter);
+        PlayerPrefs.SetFloat("RawTime", LapTimeManager.rawTime);
 
-            LapTimeManager.minCounter = 0;
-            LapTimeManager.secCounter = 0;
-            LapTimeManager.miliSecCounter = 0;
+        LapTimeManager.minCounter = 0;
+        LapTimeManager.secCounter = 0;
+        LapTimeManager.miliSecCounter = 0;
+        LapTimeManager.rawTime = 0;
 
-            halfLapTrigger.SetActive(true);
-            finishedLapTrigger.SetActive(false);
-        //}
+        lapCount.GetComponent<Text>().text = "" + numberOfCompletedLaps;
+
+        halfLapTrigger.SetActive(true);
+        finishedLapTrigger.SetActive(false);
     }
-
 }

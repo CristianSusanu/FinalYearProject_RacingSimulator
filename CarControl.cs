@@ -51,7 +51,7 @@ public class CarControl : MonoBehaviour
     public bool autoTransmission = false;
     public bool tractionControlEngage = true;
 
-    public float carSpeed = 0.0f;
+    public static float carSpeed = 0.0f;
     //private float carMaxSpeed = 240f;
     private float reverseGearMaxSpeed = 20f;
     private float firstGearMaxSpeed = 85f;

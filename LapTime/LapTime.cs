@@ -7,20 +7,23 @@ public class LapTime : MonoBehaviour
 {
     public int minCounter;
     public int secCounter;
-    public float miliSecCounter;
+    private double miliSecCounter;
+    string miliSecDisplay;
 
     public GameObject minImage;
     public GameObject secImage;
     public GameObject miliSecImage;
+
 
     void Start()
     {
         minCounter = PlayerPrefs.GetInt("SavedMinutes");
         secCounter = PlayerPrefs.GetInt("SavedSeconds");
         miliSecCounter = PlayerPrefs.GetFloat("SavedMilliseconds");
-
+        miliSecDisplay = miliSecCounter.ToString("F0");
+        
         minImage.GetComponent<Text>().text = "" + minCounter + ":";
         secImage.GetComponent<Text>().text = "" + secCounter + ".";
-        miliSecImage.GetComponent<Text>().text = "" + LapTimeManager.miliSecCounter;
+        miliSecImage.GetComponent<Text>().text = "" + miliSecCounter;
     }
 }

@@ -14,9 +14,12 @@ public class LapTimeManager : MonoBehaviour
     public GameObject secImage;
     public GameObject miliSecImage;
 
+    public static float rawTime;
+
     private void Update()
     {
         miliSecCounter +=  Time.deltaTime * 10;
+        rawTime += Time.deltaTime;
         milisecDisplay = miliSecCounter.ToString("F0");
         miliSecImage.GetComponent<Text>().text = "" + milisecDisplay;
 
@@ -50,4 +53,14 @@ public class LapTimeManager : MonoBehaviour
             minImage.GetComponent<Text>().text = "" + minCounter + ":";
         }
     }
+    /*
+    private IEnumerator OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "Car")
+        {
+            this.GetComponent<BoxCollider>().enabled = false;
+            yield return new WaitForSeconds(1);
+            this.GetComponent<BoxCollider>().enabled = true;
+        }
+    }*/
 }

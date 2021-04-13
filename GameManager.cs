@@ -42,8 +42,12 @@ public class GameManager : MonoBehaviour
         StartCoroutine(StartCounter());
     }
 
+    //Race Start CountDown
     IEnumerator StartCounter()
     {
+        GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
+        GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = false;
+
         yield return new WaitForSeconds(0.5f);//to wait for half a second
         raceStartCounter.GetComponent<Text>().text = "3";
         getReady.Play();
@@ -65,6 +69,8 @@ public class GameManager : MonoBehaviour
 
         go.Play();
         lapTimer.SetActive(true);
+        GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
+        GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = true;
     }
 
     private void Awake()
