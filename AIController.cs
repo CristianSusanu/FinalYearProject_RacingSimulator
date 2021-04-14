@@ -5,7 +5,6 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     public Transform path;
-
     private List<Transform> nodes;
     private int nodeNumber = 0;
 
@@ -74,6 +73,7 @@ public class AIController : MonoBehaviour
     public float frontSideSensorPos = 0.75f;
     public float frontSensorAngled = 30f;
     private bool collision = false;//if anything is hit, this becomes true
+
     public float objectSteeringAngle = 0f;
 
     void Start()

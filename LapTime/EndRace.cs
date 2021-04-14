@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EndRace : MonoBehaviour
 {
@@ -8,8 +9,13 @@ public class EndRace : MonoBehaviour
     public GameObject finishingCamera;
     public GameObject completeTrigger;
     public GameObject miniMapTrack;
-    public GameObject levelAudio;
+    //public GameObject levelAudio;
     public GameObject lapManager;
+    public AudioSource levelAudio;
+
+    public GameObject textPos;
+    public GameObject wonPanel;
+    public GameObject lostPanel;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -25,8 +31,18 @@ public class EndRace : MonoBehaviour
             completeTrigger.SetActive(false);
             finishingCamera.SetActive(true);
             miniMapTrack.SetActive(false);
-            levelAudio.SetActive(false);
+            //levelAudio.SetActive(false);
+            levelAudio.enabled = false;
             lapManager.SetActive(false);
+
+            if(textPos.GetComponent<Text>().text.Equals("1"))
+            {
+                wonPanel.SetActive(true);
+            }
+            else
+            {
+                lostPanel.SetActive(true);
+            }
         }
     }
 }

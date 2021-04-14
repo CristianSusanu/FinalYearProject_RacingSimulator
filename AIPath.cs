@@ -26,7 +26,7 @@ public class AIPath : MonoBehaviour
             }
         }
 
-        for(int i = 0; i < nodes.Count; i++) //count is used to get the length of the list
+        for(int i = 0; i < nodes.Count; i++)
         {
             Vector3 previousNodePosition = Vector3.zero;
             Vector3 currentNodePosition = nodes[i].position;

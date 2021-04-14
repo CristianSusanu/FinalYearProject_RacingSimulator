@@ -11,7 +11,14 @@ public class PositionPlus : MonoBehaviour
     {
         if(other.tag == "CarPositionInRace")
         {
-            RacePositionDisplay.GetComponent<Text>().text = "1";
+            if(transform.root.gameObject.name == "GT86(1)")
+            {
+                RacePositionDisplay.GetComponent<Text>().text = "1";
+            }
+            else if(transform.root.gameObject.name == "GT86(2)")
+            { 
+                RacePositionDisplay.GetComponent<Text>().text = "2";
+            }        
         }
     }
 }
