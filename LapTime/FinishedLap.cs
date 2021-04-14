@@ -27,47 +27,51 @@ public class FinishedLap : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter()
+    void OnTriggerEnter(Collider other)
     {
-        numberOfCompletedLaps++;
-        rawTime = PlayerPrefs.GetFloat("RawTime");
-        //check if the currently set time is better than the saved one
-        if (LapTimeManager.rawTime <= rawTime)
+        if(other.gameObject.tag == "Player")
         {
-            if (LapTimeManager.secCounter <= 9)
+            numberOfCompletedLaps++;
+            rawTime = PlayerPrefs.GetFloat("RawTime");
+
+            //check if the currently set time is better than the saved one
+            if (LapTimeManager.rawTime <= rawTime)
             {
-                sec.GetComponent<Text>().text = "0" + LapTimeManager.secCounter + ".";
-            }
-            else
-            {
-                sec.GetComponent<Text>().text = "" + LapTimeManager.secCounter + ".";
+                if (LapTimeManager.secCounter <= 9)
+                {
+                    sec.GetComponent<Text>().text = "0" + LapTimeManager.secCounter + ".";
+                }
+                else
+                {
+                    sec.GetComponent<Text>().text = "" + LapTimeManager.secCounter + ".";
+                }
+
+                if (LapTimeManager.minCounter <= 9)
+                {
+                    min.GetComponent<Text>().text = "0" + LapTimeManager.minCounter + ".";
+                }
+                else
+                {
+                    min.GetComponent<Text>().text = "" + LapTimeManager.minCounter + ".";
+                }
+
+                miliSec.GetComponent<Text>().text = LapTimeManager.miliSecCounter.ToString("F0");
             }
 
-            if (LapTimeManager.minCounter <= 9)
-            {
-                min.GetComponent<Text>().text = "0" + LapTimeManager.minCounter + ".";
-            }
-            else
-            {
-                min.GetComponent<Text>().text = "" + LapTimeManager.minCounter + ".";
-            }
+            PlayerPrefs.SetInt("SavedMinutes", LapTimeManager.minCounter);
+            PlayerPrefs.SetInt("SavedSeconds", LapTimeManager.secCounter);
+            PlayerPrefs.SetFloat("SavedMilliseconds", LapTimeManager.miliSecCounter);
+            PlayerPrefs.SetFloat("RawTime", LapTimeManager.rawTime);
 
-            miliSec.GetComponent<Text>().text = LapTimeManager.miliSecCounter.ToString("F0");
+            LapTimeManager.minCounter = 0;
+            LapTimeManager.secCounter = 0;
+            LapTimeManager.miliSecCounter = 0;
+            LapTimeManager.rawTime = 0;
+
+            lapCount.GetComponent<Text>().text = "" + numberOfCompletedLaps;
+
+            halfLapTrigger.SetActive(true);
+            finishedLapTrigger.SetActive(false);
         }
-
-        PlayerPrefs.SetInt("SavedMinutes", LapTimeManager.minCounter);
-        PlayerPrefs.SetInt("SavedSeconds", LapTimeManager.secCounter);
-        PlayerPrefs.SetFloat("SavedMilliseconds", LapTimeManager.miliSecCounter);
-        PlayerPrefs.SetFloat("RawTime", LapTimeManager.rawTime);
-
-        LapTimeManager.minCounter = 0;
-        LapTimeManager.secCounter = 0;
-        LapTimeManager.miliSecCounter = 0;
-        LapTimeManager.rawTime = 0;
-
-        lapCount.GetComponent<Text>().text = "" + numberOfCompletedLaps;
-
-        halfLapTrigger.SetActive(true);
-        finishedLapTrigger.SetActive(false);
     }
 }

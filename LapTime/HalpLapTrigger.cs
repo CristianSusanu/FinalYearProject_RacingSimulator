@@ -7,9 +7,12 @@ public class HalpLapTrigger : MonoBehaviour
     public GameObject fullLapTrigger;
     public GameObject halfLapTrigger;
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider other)
     {
-        fullLapTrigger.SetActive(true);
-        halfLapTrigger.SetActive(false);
+        if(other.gameObject.tag == "Player")
+        {
+            fullLapTrigger.SetActive(true);
+            halfLapTrigger.SetActive(false);
+        }
     }
 }

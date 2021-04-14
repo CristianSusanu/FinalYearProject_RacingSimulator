@@ -67,7 +67,6 @@ public class AIController : MonoBehaviour
             currentGear--;
         }
     }
-    //gearbox until here
 
     [Header("Sensors")]
     public float sensorLen = 30f;
@@ -77,7 +76,6 @@ public class AIController : MonoBehaviour
     private bool collision = false;//if anything is hit, this becomes true
     public float objectSteeringAngle = 0f;
 
-    // Start is called before the first frame update
     void Start()
     {
         Transform[] pathTransform = path.GetComponentsInChildren<Transform>();
@@ -156,7 +154,7 @@ public class AIController : MonoBehaviour
         if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
         {
             //check if the terrain is hit, to not avoid it as it is not an obstacle
-            if (!hit.collider.CompareTag("Terrain"))
+            if (!hit.collider.CompareTag("Terrain")) 
             {
                 Debug.DrawLine(sensorStart, hit.point);
 
@@ -212,7 +210,8 @@ public class AIController : MonoBehaviour
             if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
             {
                 //check if the terrain is hit, to not avoid it as it is not an obstacle
-                if (!hit.collider.CompareTag("Terrain"))
+                //also check the checkpoints used for lap numbering for player car, and ignore them for AI car
+                if (!hit.collider.CompareTag("Terrain") && !hit.collider.CompareTag("LapCheckpoint"))
                 {
                     Debug.DrawLine(sensorStart, hit.point);
                     collision = true;//to indicate something else than terrain was hit

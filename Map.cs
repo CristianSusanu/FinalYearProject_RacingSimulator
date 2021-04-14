@@ -7,9 +7,11 @@ public class Map : MonoBehaviour
     private LineRenderer line;
     private GameObject track;
     public GameObject car;
+    public GameObject aiCar;
     public Transform carTr;
     public GameObject map;
     public GameObject pointerSphere;
+    public GameObject oponentCarPointerSphere;
 
     // Start is called before the first frame update
     void Start()
@@ -37,5 +39,6 @@ public class Map : MonoBehaviour
         map.transform.rotation = Quaternion.Euler(90f, carTr.eulerAngles.y, 0f);
 
         pointerSphere.transform.position = (new Vector3(car.transform.position.x, pointerSphere.transform.position.y, car.transform.position.z));
+        oponentCarPointerSphere.transform.position = (new Vector3(aiCar.transform.position.x, oponentCarPointerSphere.transform.position.y, aiCar.transform.position.z));
     }
 }

@@ -46,6 +46,7 @@ public class GameManager : MonoBehaviour
     IEnumerator StartCounter()
     {
         GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
+        GameObject.Find("GT86").GetComponent<AIController>().enabled = false;
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = false;
 
         yield return new WaitForSeconds(0.5f);//to wait for half a second
@@ -70,6 +71,7 @@ public class GameManager : MonoBehaviour
         go.Play();
         lapTimer.SetActive(true);
         GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
+        GameObject.Find("GT86").GetComponent<AIController>().enabled = true;
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = true;
     }
 

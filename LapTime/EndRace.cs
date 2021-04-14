@@ -7,19 +7,26 @@ public class EndRace : MonoBehaviour
     public GameObject car;
     public GameObject finishingCamera;
     public GameObject completeTrigger;
-    //public GameObject view;
-    //public GameObject levelMusic;
+    public GameObject miniMapTrack;
+    public GameObject levelAudio;
+    public GameObject lapManager;
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider other)
     {
-        //car.SetActive(false);
-        CarControl.carSpeed = 0f;
-        completeTrigger.SetActive(false);
-        //car.GetComponent<CarControl>().enabled = false;
-        //car.GetComponent<AIController>().enabled = false;
-        //car.SetActive(true);
-        finishingCamera.SetActive(true);
-        //levelMusic.SetActive(false);
-        //view.SetActive(false);
+        if(other.gameObject.tag == "Player")
+        {
+            CarControl.carSpeed = 0f;
+            car.GetComponent<InputManager>().enabled = false;
+            car.GetComponent<CarControl>().enabled = false;
+            car.GetComponent<SoundController>().enabled = false;
+            car.GetComponent<SpeedIndicator>().enabled = false;
+            car.GetComponent<AntiRollBar>().enabled = false;
+
+            completeTrigger.SetActive(false);
+            finishingCamera.SetActive(true);
+            miniMapTrack.SetActive(false);
+            levelAudio.SetActive(false);
+            lapManager.SetActive(false);
+        }
     }
 }

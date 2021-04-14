@@ -55,6 +55,7 @@ public class CameraManager : MonoBehaviour
     private int cameraMode = 0;
 
     public GameManager gameMan;
+    public AudioSource levelAudio;
 
     /*private void Awake()
     {
@@ -117,6 +118,7 @@ public class CameraManager : MonoBehaviour
                 displaySupplementaryInteriorInfo(true);
                 DisplayMirrorImage(true);
                 DisplayCentralOutsideMirror(false);
+                levelAudio.volume = 0.65f;
 
                 break;
             //bonet view
@@ -130,6 +132,7 @@ public class CameraManager : MonoBehaviour
                 displaySupplementaryInteriorInfo(false);
                 gameMan.tractionCtrlInteriorIcon.SetActive(false);
                 DisplayMirrorImage(false);
+                levelAudio.volume = 0.55f;
 
                 break;
             //behind the car view
@@ -161,6 +164,7 @@ public class CameraManager : MonoBehaviour
                 displaySupplementaryInteriorInfo(false);
                 gameMan.tractionCtrlInteriorIcon.SetActive(false);
                 DisplayMirrorImage(false);
+                levelAudio.volume = 0.15f;
 
                 break;
         }
