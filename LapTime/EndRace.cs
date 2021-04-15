@@ -20,13 +20,16 @@ public class EndRace : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
-        {
+        {/*
             CarControl.carSpeed = 0f;
             car.GetComponent<InputManager>().enabled = false;
             car.GetComponent<CarControl>().enabled = false;
             car.GetComponent<SoundController>().enabled = false;
             car.GetComponent<SpeedIndicator>().enabled = false;
-            car.GetComponent<AntiRollBar>().enabled = false;
+            car.GetComponent<AntiRollBar>().enabled = false;*/
+
+            GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
+            GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
 
             completeTrigger.SetActive(false);
             finishingCamera.SetActive(true);

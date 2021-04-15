@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
     //public GameObject startPos;
 
     private float speed = 0.0f;
+    public GameObject gamePaused;
+    private bool menuPause = false;
 
     private void Start()
     {
@@ -48,6 +50,7 @@ public class GameManager : MonoBehaviour
         GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
         GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = false;
         GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = false;
+        GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = false;
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = false;
 
         yield return new WaitForSeconds(0.5f);//to wait for half a second
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour
         GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
         GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = true;
         GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = true;
+        GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = true;
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = true;
     }
     /*
@@ -83,6 +87,27 @@ public class GameManager : MonoBehaviour
         carControl = GameObject.FindGameObjectWithTag("Player").GetComponent<CarControl>();
 
     }*/
+    
+    private void Update()
+    {
+        if (InputManager.gamePause)
+        {
+            if (menuPause)
+            {
+                Time.timeScale = 1;
+                gamePaused.SetActive(false);
+                GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
+                menuPause = false;
+            }
+            else
+            {
+                Time.timeScale = 0;
+                gamePaused.SetActive(true);
+                menuPause = true;
+                GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
+            }
+        }
+    }
 
     void FixedUpdate()
     {
@@ -116,7 +141,7 @@ public class GameManager : MonoBehaviour
         {
             tractionCtrlIcon.SetActive(true);
             tractionCtrlInteriorIcon.SetActive(true);
-        }
+        }      
     }
 
     public void gearChange()

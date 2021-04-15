@@ -18,7 +18,11 @@ public class PositionPlus : MonoBehaviour
             else if(transform.root.gameObject.name == "GT86(2)")
             { 
                 RacePositionDisplay.GetComponent<Text>().text = "2";
-            }        
+            }
+            else if (transform.root.gameObject.name == "GT86(3)")
+            {
+                RacePositionDisplay.GetComponent<Text>().text = "3";
+            }
         }
     }
 }

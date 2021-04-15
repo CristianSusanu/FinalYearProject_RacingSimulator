@@ -16,6 +16,7 @@ public class InputManager : MonoBehaviour
     public bool transmission;//switch between automatic and manual transmission
     public bool carReset;//reset the car in case it rolls over
     public bool tractionControlToggle;//to turn the traction control on or off
+    public static bool gamePause;
 
     void Update()
     {
@@ -32,5 +33,6 @@ public class InputManager : MonoBehaviour
         carReset = Input.GetKeyDown(KeyCode.R);
 
         tractionControlToggle = Input.GetKeyDown(KeyCode.T);
+        gamePause = Input.GetKeyDown(KeyCode.Escape);
     }
 }
