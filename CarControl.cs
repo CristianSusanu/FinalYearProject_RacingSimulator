@@ -31,8 +31,8 @@ public class CarControl : MonoBehaviour
     //engine charateristics
     public float MaxEngineRPM = 9000.0f;
     private float MinEngineRPM = 950.0f;
-    private float shiftUpRPM = 5500.0f;
-    private float downShiftRPM = 3000.0f;
+    private float shiftUpRPM = 6000.0f;
+    private float downShiftRPM = 4500.0f;
     private int index = 0;
 
     //Engine max torque NM and RPM
@@ -53,12 +53,12 @@ public class CarControl : MonoBehaviour
 
     public static float carSpeed = 0.0f;
     //private float carMaxSpeed = 240f;
-    private float reverseGearMaxSpeed = 20f;
+    private float reverseGearMaxSpeed = 25f;
     private float firstGearMaxSpeed = 85f;
-    private float secondGearMaxSpeed = 135f;
-    private float thirdGearMaxSpeed = 155f;
-    private float fourthGearMaxSpeed = 170f;
-    private float fifthGearMaxSpeed = 240f;
+    private float secondGearMaxSpeed = 155f;
+    private float thirdGearMaxSpeed = 195f;
+    private float fourthGearMaxSpeed = 235f;
+    private float fifthGearMaxSpeed = 270f;
 
     public List<GameObject> steeringWheels;
     public List<GameObject> wheelMeshes;//contain all the wheel objects
@@ -67,14 +67,14 @@ public class CarControl : MonoBehaviour
     public List<GameObject> signalLights;
 
     //public float strengthCoeffiecient = 30000f;
-    private float brakeIntensity = 9500f;
+    private float brakeIntensity = 13000f;
 
     private float downForce = 50.0f;
 
     public Rigidbody rigidB;
 
     float gearShiftDelay = 0.0f;
-    private float torque = 20000f;
+    private float torque = 65000f;
     private float newTorque = 0.0f;
 
     public void ShiftUp()
@@ -282,11 +282,26 @@ public class CarControl : MonoBehaviour
 
     private float wheelBaseLength = 2.4f;
     private float rearTrackSize = 1.35f;
-    private float turnRadius = 15f;
+    private float turnRadius = 0f;
     private float maxWheelTurn = 20f;
 
     private void Steering()
     {
+        if(carSpeed <= 40f)
+        {
+            turnRadius = 5f;
+        } else if(carSpeed > 40f && carSpeed <= 100f)
+        {
+            turnRadius = 12;
+        } else if(carSpeed > 100f && carSpeed <= 150)
+        {
+            turnRadius = 15f;
+        }
+        else
+        {
+            turnRadius = 18f;
+        }
+
         if(inputManager.steering > 0)
         {
             FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = Mathf.Rad2Deg * Mathf.Atan(wheelBaseLength / (turnRadius + (rearTrackSize / 2))) * inputManager.steering ;

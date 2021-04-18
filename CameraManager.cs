@@ -164,7 +164,7 @@ public class CameraManager : MonoBehaviour
                 displaySupplementaryInteriorInfo(false);
                 gameMan.tractionCtrlInteriorIcon.SetActive(false);
                 DisplayMirrorImage(false);
-                levelAudio.volume = 0.15f;
+                levelAudio.volume = 0.25f;
 
                 break;
         }

@@ -8,8 +8,8 @@ public class AIPath : MonoBehaviour
 
     private List<Transform> nodes = new List<Transform>();//only contains the child nodes, not itself
 
-    private void OnDrawGizmosSelected()//the function will be executed only when the game object is selected
-    //private void OnDrawGizmos()//schimb cu cea de sus cand termin, ca sa apara pathul doar cand selected
+    //private void OnDrawGizmosSelected()//the function will be executed only when the game object is selected
+    private void OnDrawGizmos()//schimb cu cea de sus cand termin, ca sa apara pathul doar cand selected
     {
         Gizmos.color = lineCol;
 

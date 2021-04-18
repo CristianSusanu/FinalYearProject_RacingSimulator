@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FinishedLap : MonoBehaviour
 {
@@ -21,9 +22,33 @@ public class FinishedLap : MonoBehaviour
 
     private void Update()
     {
-        if(numberOfCompletedLaps == 1)
+        if (SceneManager.GetActiveScene().name == "Circuit1-Indianopolis")
         {
-            finish.SetActive(true);
+            if (numberOfCompletedLaps == 3)
+            {
+                finish.SetActive(true);
+            }
+        }
+        else if (SceneManager.GetActiveScene().name == "Circuit2-CastleCombe")
+        {
+            if (numberOfCompletedLaps == 1)
+            {
+                finish.SetActive(true);
+            }
+        }
+        else if (SceneManager.GetActiveScene().name == "Circuit3-LimeRock")
+        {
+            if (numberOfCompletedLaps == 1)
+            {
+                finish.SetActive(true);
+            }
+        }
+        else if (SceneManager.GetActiveScene().name == "Circuit4-LyddenHill")
+        {
+            if (numberOfCompletedLaps == 1)
+            {
+                finish.SetActive(true);
+            }
         }
     }
 
