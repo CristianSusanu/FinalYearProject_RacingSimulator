@@ -17,6 +17,12 @@ public class EndRace : MonoBehaviour
     public GameObject wonPanel;
     public GameObject lostPanel;
 
+    private void Awake()
+    {
+        car = GameObject.FindGameObjectWithTag("Player");
+        
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
@@ -28,11 +34,16 @@ public class EndRace : MonoBehaviour
             car.GetComponent<SpeedIndicator>().enabled = false;
             car.GetComponent<AntiRollBar>().enabled = false;*/
 
-            GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
-            GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
+            //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
+            //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
+
+            CarControl.carSpeed = 0f;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = false;
+            GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
 
             completeTrigger.SetActive(false);
-            finishingCamera.SetActive(true);
+            
+            //finishingCamera.SetActive(true);
             miniMapTrack.SetActive(false);
             //levelAudio.SetActive(false);
             levelAudio.enabled = false;
@@ -46,6 +57,8 @@ public class EndRace : MonoBehaviour
             {
                 lostPanel.SetActive(true);
             }
+
+            GameObject.FindGameObjectWithTag("RaceFinishCube").SetActive(true);
         }
     }
 }

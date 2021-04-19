@@ -22,6 +22,7 @@ public class FinishedLap : MonoBehaviour
 
     private void Update()
     {
+        /*
         if (SceneManager.GetActiveScene().name == "Circuit1-Indianopolis")
         {
             if (numberOfCompletedLaps == 3)
@@ -49,6 +50,18 @@ public class FinishedLap : MonoBehaviour
             {
                 finish.SetActive(true);
             }
+        }
+        else if (SceneManager.GetActiveScene().name == "Circuit5-Tsukuba")
+        {
+            if (numberOfCompletedLaps == 1)
+            {
+                finish.SetActive(true);
+            }
+        }
+        */
+        if (numberOfCompletedLaps == 0)
+        {
+            finish.SetActive(true);
         }
     }
 

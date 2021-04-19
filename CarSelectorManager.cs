@@ -5,12 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class CarSelectorManager : MonoBehaviour
 {
-    //public CarSelectorList carList;
-    public GameObject car;
+    public CarSelectorList carList;
+    //public GameObject car;
     public GameObject carStand;
     private float standRotationSpeed = 15f;
     public int vehiclePointer = 0;
-    /*
+    
     private void Awake()
     {
         //PlayerPrefs.SetInt("pointer", 0);
@@ -20,19 +20,19 @@ public class CarSelectorManager : MonoBehaviour
         //instantiate the vehicle stored in the pointer
         GameObject individualCar = Instantiate(carList.cars[vehiclePointer], Vector3.zero, Quaternion.identity) as GameObject;
         individualCar.transform.parent = carStand.transform;
-    }*/
+    }
 
     private void FixedUpdate()
     {
-        
+        /*
         car = GameObject.FindGameObjectWithTag("Car");
         car.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
         carStand.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
-        
+        */
 
-        //carStand.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
+        carStand.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
     }
-    /*
+    
     public void NextButton()
     {
         if (vehiclePointer < carList.cars.Length - 1)
@@ -56,7 +56,7 @@ public class CarSelectorManager : MonoBehaviour
             individualCar.transform.parent = carStand.transform;
         }
     }
-    */
+    
     public void StartGame()
     {
         SceneManager.LoadScene("Circuit1-Indianopolis");

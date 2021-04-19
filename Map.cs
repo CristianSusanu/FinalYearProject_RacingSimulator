@@ -30,6 +30,9 @@ public class Map : MonoBehaviour
         line.SetPosition(nodeNumber, line.GetPosition(0));
         line.startWidth = 13f;
         line.endWidth = 13f;
+
+        car = GameObject.FindGameObjectWithTag("Player");
+        carTr = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
     // Update is called once per frame

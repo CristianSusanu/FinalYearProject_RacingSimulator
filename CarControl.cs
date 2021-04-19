@@ -117,6 +117,9 @@ public class CarControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        rigidB = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
+        //inputManager = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>();
+
         inputManager = GetComponent<InputManager>();
         soundController = GetComponent<SoundController>();
         rigidB.centerOfMass = new Vector3(0.0f, 0.2f, 0.0f);

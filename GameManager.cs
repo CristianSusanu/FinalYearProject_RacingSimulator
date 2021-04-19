@@ -32,12 +32,19 @@ public class GameManager : MonoBehaviour
     public AudioSource getReady;
     public AudioSource go;
 
-    //public CarSelectorList carList;
-    //public GameObject startPos;
+    public CarSelectorList carList;
+    public GameObject startPos;
 
     private float speed = 0.0f;
     public GameObject gamePaused;
     private bool menuPause = false;
+
+    private void Awake()
+    {
+        Instantiate(carList.cars[PlayerPrefs.GetInt("pointer")], startPos.transform.position, startPos.transform.rotation);
+        carControl = GameObject.FindGameObjectWithTag("Player").GetComponent<CarControl>();
+
+    }
 
     private void Start()
     {
@@ -47,7 +54,8 @@ public class GameManager : MonoBehaviour
     //Race Start CountDown
     IEnumerator StartCounter()
     {
-        GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
+        //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = false;
         GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = false;
         GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = false;
         GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = false;
@@ -74,19 +82,13 @@ public class GameManager : MonoBehaviour
 
         go.Play();
         lapTimer.SetActive(true);
-        GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
+        //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
         GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = true;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = true;
         GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = true;
         GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = true;
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = true;
     }
-    /*
-    private void Awake()
-    {
-        //Instantiate(carList.cars[PlayerPrefs.GetInt("pointer")], startPos.transform.position, startPos.transform.rotation);
-        carControl = GameObject.FindGameObjectWithTag("Player").GetComponent<CarControl>();
-
-    }*/
     
     private void Update()
     {

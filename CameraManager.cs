@@ -72,6 +72,8 @@ public class CameraManager : MonoBehaviour
         rearViewCameraOutsideImage.SetActive(false);
         rearViewCameraOutsideBorder.SetActive(false);
 
+        car = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        parentRigidbody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         //Instantiate(carList.cars[PlayerPrefs.GetInt("pointer")], Vector3.zero, Quaternion.identity);
         //car = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         //parentRigidbody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();

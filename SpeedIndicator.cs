@@ -33,6 +33,7 @@ public class SpeedIndicator : MonoBehaviour
     private float maxOilArrowAngle = -88f;
 
     public GameObject steeringWheel;
+
     public GameObject speedNeedle;
     public GameObject RPMNeedle;
     public GameObject fuelNeedle;
@@ -53,7 +54,7 @@ public class SpeedIndicator : MonoBehaviour
             speedNeedle.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minSpeedArrowAngle, maxSpeedArrowAngle, speed / maxSpeed));
         }
 
-        if(RPMNeedle != null)
+        if (RPMNeedle != null)
         {
             RPMNeedle.transform.localEulerAngles = new Vector3(0f, 0f, Mathf.Lerp(minRPMArrowAngle + 18f, maxRPMArrowAngle, RPM / maxRPM));
         }
