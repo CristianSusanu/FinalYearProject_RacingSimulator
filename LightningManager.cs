@@ -23,17 +23,22 @@ public class LightningManager : MonoBehaviour
                 light.intensity = 4;
                 light.range = 45;
 
-                //headlight pop-up
-                leftHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(0f, headlightMinAngle, headlightMaxAngle), 0f, Time.deltaTime * 20);
-                rightHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(0f, headlightMinAngle, headlightMaxAngle), 0f, Time.deltaTime * 20);
-
+                //headlight pop-up for white Trueno
+                if (gameObject.name.Equals("AE86Trueno(Clone)"))
+                {
+                    leftHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(0f, headlightMinAngle, headlightMaxAngle), 0f, Time.deltaTime * 20);
+                    rightHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(0f, headlightMinAngle, headlightMaxAngle), 0f, Time.deltaTime * 20);
+                }
             } else
             {
                 light.intensity = 0;
 
-                //headlight pop-down
-                leftHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(headlightMinAngle, headlightMaxAngle, 0f), 0f, Time.deltaTime * 20);
-                rightHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(headlightMinAngle, headlightMaxAngle, 0f), 0f, Time.deltaTime * 20);
+                //headlight pop-down for white Trueno
+                if (gameObject.name.Equals("AE86Trueno(Clone)"))
+                {
+                    leftHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(headlightMinAngle, headlightMaxAngle, 0f), 0f, Time.deltaTime * 20);
+                    rightHeadLight.transform.localEulerAngles = new Vector3(Mathf.Clamp(headlightMinAngle, headlightMaxAngle, 0f), 0f, Time.deltaTime * 20);
+                }
             }
         }
 

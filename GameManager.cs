@@ -98,7 +98,8 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale = 1;
                 gamePaused.SetActive(false);
-                GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
+                //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = true;
                 menuPause = false;
             }
             else
@@ -106,7 +107,8 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0;
                 gamePaused.SetActive(true);
                 menuPause = true;
-                GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
+                //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
+                GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
             }
         }
     }

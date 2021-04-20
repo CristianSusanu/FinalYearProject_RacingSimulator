@@ -29,7 +29,8 @@ public class EndOfRaceButtons : MonoBehaviour
     {
         Time.timeScale = 0;
         gamePaused.SetActive(true);
-        GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
+        //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
         //car.GetComponent<SoundController>().enabled = false;
     }
 
@@ -38,7 +39,8 @@ public class EndOfRaceButtons : MonoBehaviour
         Time.timeScale = 1;
         gamePaused.SetActive(false);
 
-        GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
+        GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = true;
+        //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
         //car.GetComponent<SoundController>().enabled = true;
     }
 }

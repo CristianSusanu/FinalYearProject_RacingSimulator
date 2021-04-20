@@ -77,6 +77,10 @@ public class CarControl : MonoBehaviour
     private float torque = 65000f;
     private float newTorque = 0.0f;
 
+    //car shop entries
+    public int carPrice;
+    public string carName;
+
     public void ShiftUp()
     {
         float now = Time.timeSinceLevelLoad;

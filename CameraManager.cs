@@ -5,7 +5,6 @@ using UnityEngine;
 public class CameraManager : MonoBehaviour
 {
     public Transform car;
-    //public CarSelectorList carList;
     public GameObject rearViewCamera;
     public GameObject rearViewCameraImage;
     public GameObject rearViewCentralCamera;
@@ -57,13 +56,6 @@ public class CameraManager : MonoBehaviour
     public GameManager gameMan;
     public AudioSource levelAudio;
 
-    /*private void Awake()
-    {
-        Instantiate(carList.cars[PlayerPrefs.GetInt("pointer")], Vector3.zero, Quaternion.identity);
-        car = GameObject.FindGameObjectWithTag("Car").GetComponent<Transform>();
-        parentRigidbody = GameObject.FindGameObjectWithTag("Car").GetComponent<Rigidbody>();
-    }*/
-
     void Start()
     {
         lookAtVector = new Vector3(0, lookAtHeight, 0);
@@ -74,9 +66,6 @@ public class CameraManager : MonoBehaviour
 
         car = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
         parentRigidbody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
-        //Instantiate(carList.cars[PlayerPrefs.GetInt("pointer")], Vector3.zero, Quaternion.identity);
-        //car = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        //parentRigidbody = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
     }
 
     void LateUpdate()

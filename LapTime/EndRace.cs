@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class EndRace : MonoBehaviour
 {
     public GameObject car;
-    public GameObject finishingCamera;
+    private GameObject finishingCamera;
     public GameObject completeTrigger;
     public GameObject miniMapTrack;
     //public GameObject levelAudio;
@@ -20,45 +20,40 @@ public class EndRace : MonoBehaviour
     private void Awake()
     {
         car = GameObject.FindGameObjectWithTag("Player");
-        
+        finishingCamera = car.transform.Find("RaceFinishCub").gameObject;
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if(other.gameObject.tag == "Player")
-        {/*
-            CarControl.carSpeed = 0f;
-            car.GetComponent<InputManager>().enabled = false;
-            car.GetComponent<CarControl>().enabled = false;
-            car.GetComponent<SoundController>().enabled = false;
-            car.GetComponent<SpeedIndicator>().enabled = false;
-            car.GetComponent<AntiRollBar>().enabled = false;*/
-
-            //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
-            //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
-
+        {
             CarControl.carSpeed = 0f;
             GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = false;
+            //GameObject.FindGameObjectWithTag("Player").GetComponent<CarControl>().enabled = false;
+            //GameObject.FindGameObjectWithTag("Player").GetComponent<SpeedIndicator>().enabled = false;
             GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
+            //GameObject.FindGameObjectWithTag("Player").GetComponent<AntiRollBar>().enabled = false;
 
             completeTrigger.SetActive(false);
             
-            //finishingCamera.SetActive(true);
+            finishingCamera.SetActive(true);
             miniMapTrack.SetActive(false);
             //levelAudio.SetActive(false);
             levelAudio.enabled = false;
             lapManager.SetActive(false);
 
-            if(textPos.GetComponent<Text>().text.Equals("1"))
+            if (textPos.GetComponent<Text>().text.Equals("1"))
             {
                 wonPanel.SetActive(true);
+                PlayerPrefs.SetInt("currency", PlayerPrefs.GetInt("currency") + 1000);
+                Debug.Log(PlayerPrefs.GetInt("currency"));
             }
             else
             {
                 lostPanel.SetActive(true);
             }
-
-            GameObject.FindGameObjectWithTag("RaceFinishCube").SetActive(true);
+            
+            //car.transform.Find("RaceFinishCub").gameObject.SetActive(true);
         }
     }
 }
