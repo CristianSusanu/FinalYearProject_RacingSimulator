@@ -45,4 +45,9 @@ public class MenuLoadBar : MonoBehaviour
         Application.Quit();
         //Debug.Log("Game Closed");
     }
+
+    public void ResetGameStats()
+    {
+        PlayerPrefs.DeleteAll();
+    }
 }

@@ -17,7 +17,7 @@ public class EndOfRaceButtons : MonoBehaviour
     public void TryAgain(int sceneNumber)
     {
         SceneManager.LoadScene(sceneNumber);
-        Time.timeScale = 1;
+        //Time.timeScale = 1;
     }
 
     public void NextRace(int sceneNumber)

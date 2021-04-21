@@ -80,6 +80,9 @@ public class CarControl : MonoBehaviour
     //car shop entries
     public int carPrice;
     public string carName;
+    public int horsePower;
+    public int topSpeed;
+    public float acceleration0100;
 
     public void ShiftUp()
     {

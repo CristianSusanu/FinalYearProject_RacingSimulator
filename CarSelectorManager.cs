@@ -15,6 +15,10 @@ public class CarSelectorManager : MonoBehaviour
     public Text currency;
     public Text carName;
     public Text carPrice;
+    public Text horsePower;
+    public Text topSpeed;
+    public Text acceleration;
+    public Text weight;
 
     public GameObject buyCarButton;
     public GameObject playButton;
@@ -22,10 +26,9 @@ public class CarSelectorManager : MonoBehaviour
     private void Awake()
     {
         //delete this for the final version of the game
-        PlayerPrefs.DeleteAll();
+        //PlayerPrefs.DeleteAll();
         //PlayerPrefs.SetInt("pointer", 0);
-        vehiclePointer = PlayerPrefs.GetInt("pointer");//get the pointer
-        PlayerPrefs.SetInt("currency", 10000);
+        vehiclePointer = PlayerPrefs.GetInt("pointer");//get the pointer       
 
         //instantiate the vehicle stored in the pointer
         GameObject individualCar = Instantiate(carList.cars[vehiclePointer], Vector3.zero, Quaternion.identity) as GameObject;
@@ -108,16 +111,28 @@ public class CarSelectorManager : MonoBehaviour
             PlayerPrefs.GetString(carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().carName.ToString()))
         {
             carName.text = "Owned";
+            carPrice.text = "";
             playButton.SetActive(true);
             buyCarButton.SetActive(false);
-            currency.text = "$" + PlayerPrefs.GetInt("currency").ToString("");
+            currency.text = "Budget: $" + PlayerPrefs.GetInt("currency").ToString("");
+
+            horsePower.text = "Power: " + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().horsePower.ToString() + " hp";
+            topSpeed.text = "TopSpeed: " + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().topSpeed.ToString() + " km/h";
+            acceleration.text = "Acceleration 0-100 km/h: " + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().acceleration0100.ToString() + "s";
+            weight.text = "Weight: " + ((int)carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<Rigidbody>().mass).ToString() + "kg";
+
             return;
         }
 
-        currency.text = "$" + PlayerPrefs.GetInt("currency").ToString("");
+        currency.text = "Budget: $" + PlayerPrefs.GetInt("currency").ToString("");
 
         carName.text = carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().carName.ToString();
         carPrice.text = "$" + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().carPrice.ToString();
+
+        horsePower.text = "Power: " + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().horsePower.ToString() + " hp";
+        topSpeed.text = "TopSpeed: " + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().topSpeed.ToString() + " km/h";
+        acceleration.text = "Acceleration 0-100 km/h: " + carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<CarControl>().acceleration0100.ToString() + "s";
+        weight.text = "Weight: " + ((int)carList.cars[PlayerPrefs.GetInt("pointer")].GetComponent<Rigidbody>().mass).ToString() + "kg";
 
         playButton.SetActive(false);
         buyCarButton.SetActive(true);
