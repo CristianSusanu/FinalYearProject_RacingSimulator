@@ -17,7 +17,12 @@ public class EndOfRaceButtons : MonoBehaviour
     public void TryAgain(int sceneNumber)
     {
         SceneManager.LoadScene(sceneNumber);
-        //Time.timeScale = 1;
+        Time.timeScale = 1;
+
+        //to reset the current lap time when game is reset
+        LapTimeManager.minCounter = 0;
+        LapTimeManager.secCounter = 0;
+        LapTimeManager.miliSecCounter = 0;
     }
 
     public void NextRace(int sceneNumber)
@@ -30,8 +35,6 @@ public class EndOfRaceButtons : MonoBehaviour
         Time.timeScale = 0;
         gamePaused.SetActive(true);
         GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
-        //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
-        //car.GetComponent<SoundController>().enabled = false;
     }
 
     public void ResumeGame()
@@ -40,7 +43,5 @@ public class EndOfRaceButtons : MonoBehaviour
         gamePaused.SetActive(false);
 
         GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = true;
-        //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
-        //car.GetComponent<SoundController>().enabled = true;
     }
 }
