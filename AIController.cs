@@ -12,7 +12,7 @@ public class AIController : MonoBehaviour
     //private float turningSpeed = 0.1f;
     public float motorTorque = 25000f;
     private float carSpeed = 0f;
-    private float brakeIntensity = 100f;
+    private float brakeIntensity = 150f;
 
     //public WheelCollider FrontLeftWheel;
     //public WheelCollider FrontRightWheel;

@@ -59,9 +59,19 @@ public class FinishedLap : MonoBehaviour
             }
         }
         */
-        if (numberOfCompletedLaps == 0)
+
+        if (SceneManager.GetActiveScene().name == "Circuit1-Indianopolis")
         {
-            finish.SetActive(true);
+            if (numberOfCompletedLaps == 1)
+            {
+                finish.SetActive(true);
+            }
+        }else
+        {
+            if (numberOfCompletedLaps == 0)
+            {
+                finish.SetActive(true);
+            }
         }
     }
 

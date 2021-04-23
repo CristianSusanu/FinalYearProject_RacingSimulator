@@ -1,14 +1,16 @@
 ﻿using System.Collections;
-//using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI; //to reference slider
+using UnityEngine.UI;
 
 public class MenuLoadBar : MonoBehaviour
 {
     public GameObject loadScreen;
     public Slider loadSlider;
     public Text loadText;
+    public Text currency;
+    private bool muted = false;
 
     public void LevelLoading(int sceneNumber)
     {
@@ -40,14 +42,33 @@ public class MenuLoadBar : MonoBehaviour
         }
     }
 
+    public void ResetGameStats()
+    {
+        PlayerPrefs.DeleteAll();
+    }
+
+    public void MuteAudio()
+    {
+        if (!muted)
+        {
+            AudioListener.volume = 0;
+            muted = true;
+        }
+        else
+        {
+            AudioListener.volume = 1;
+            muted = false;
+        }
+    }
+
     public void Exit()
     {
         Application.Quit();
         //Debug.Log("Game Closed");
     }
 
-    public void ResetGameStats()
+    private void Update()
     {
-        PlayerPrefs.DeleteAll();
+        currency.text = "Budget: $" + PlayerPrefs.GetInt("currency").ToString();
     }
 }

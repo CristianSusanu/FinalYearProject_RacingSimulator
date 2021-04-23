@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,11 +55,19 @@ public class GameManager : MonoBehaviour
     //Race Start CountDown
     IEnumerator StartCounter()
     {
-        //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = false;
         GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = false;
-        GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = false;
-        GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = false;
-        GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = false;
+
+        if (SceneManager.GetActiveScene().name == "Circuit6-RedBullRing")
+        {
+            GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = false;
+        }
+        else
+        {
+            GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = false;
+            GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = false;
+            GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = false;
+        }
+
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = false;
 
         yield return new WaitForSeconds(0.5f);//to wait for half a second
@@ -83,10 +92,19 @@ public class GameManager : MonoBehaviour
         go.Play();
         lapTimer.SetActive(true);
         //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
-        GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = true;
         GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = true;
-        GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = true;
-        GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = true;
+
+        if (SceneManager.GetActiveScene().name == "Circuit6-RedBullRing")
+        {
+            GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = true;
+        }
+        else
+        {
+            GameObject.Find("GT86(1)").GetComponent<AIController>().enabled = true;
+            GameObject.Find("GT86(2)").GetComponent<AIController>().enabled = true;
+            GameObject.Find("GT86(3)").GetComponent<AIController>().enabled = true;
+        }
+
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = true;
     }
     
@@ -98,7 +116,6 @@ public class GameManager : MonoBehaviour
             {
                 Time.timeScale = 1;
                 gamePaused.SetActive(false);
-                //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = true;
                 GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = true;
                 menuPause = false;
             }
@@ -107,7 +124,6 @@ public class GameManager : MonoBehaviour
                 Time.timeScale = 0;
                 gamePaused.SetActive(true);
                 menuPause = true;
-                //GameObject.Find("AE86Trueno").GetComponent<SoundController>().enabled = false;
                 GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
             }
         }
