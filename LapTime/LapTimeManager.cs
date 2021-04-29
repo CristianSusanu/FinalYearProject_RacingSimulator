@@ -53,14 +53,4 @@ public class LapTimeManager : MonoBehaviour
             minImage.GetComponent<Text>().text = "" + minCounter + ":";
         }
     }
-    /*
-    private IEnumerator OnTriggerEnter(Collider other)
-    {
-        if(other.gameObject.tag == "Car")
-        {
-            this.GetComponent<BoxCollider>().enabled = false;
-            yield return new WaitForSeconds(1);
-            this.GetComponent<BoxCollider>().enabled = true;
-        }
-    }*/
 }

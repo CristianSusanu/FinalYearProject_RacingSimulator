@@ -64,7 +64,6 @@ public class MenuLoadBar : MonoBehaviour
     public void Exit()
     {
         Application.Quit();
-        //Debug.Log("Game Closed");
     }
 
     private void Update()

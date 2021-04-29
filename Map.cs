@@ -12,8 +12,7 @@ public class Map : MonoBehaviour
     public GameObject map;
     public GameObject pointerSphere;
     public GameObject oponentCarPointerSphere;
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         line = GetComponent<LineRenderer>();
@@ -35,7 +34,6 @@ public class Map : MonoBehaviour
         carTr = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         map.transform.position = (new Vector3(car.transform.position.x, map.transform.position.y, car.transform.position.z));

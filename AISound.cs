@@ -31,7 +31,6 @@ public class AISound : MonoBehaviour
         return sound.GetComponent<AudioSource>();
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         rigidB = GetComponent<Rigidbody>();
@@ -44,7 +43,6 @@ public class AISound : MonoBehaviour
         engineReverseSource.transform.localPosition = new Vector3(0f, 0.5f, 1.3f);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetAxis("Vertical") == 0)

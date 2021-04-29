@@ -22,44 +22,6 @@ public class FinishedLap : MonoBehaviour
 
     private void Update()
     {
-        /*
-        if (SceneManager.GetActiveScene().name == "Circuit1-Indianopolis")
-        {
-            if (numberOfCompletedLaps == 3)
-            {
-                finish.SetActive(true);
-            }
-        }
-        else if (SceneManager.GetActiveScene().name == "Circuit2-CastleCombe")
-        {
-            if (numberOfCompletedLaps == 1)
-            {
-                finish.SetActive(true);
-            }
-        }
-        else if (SceneManager.GetActiveScene().name == "Circuit3-LimeRock")
-        {
-            if (numberOfCompletedLaps == 1)
-            {
-                finish.SetActive(true);
-            }
-        }
-        else if (SceneManager.GetActiveScene().name == "Circuit4-LyddenHill")
-        {
-            if (numberOfCompletedLaps == 1)
-            {
-                finish.SetActive(true);
-            }
-        }
-        else if (SceneManager.GetActiveScene().name == "Circuit5-Tsukuba")
-        {
-            if (numberOfCompletedLaps == 1)
-            {
-                finish.SetActive(true);
-            }
-        }
-        */
-
         if (SceneManager.GetActiveScene().name == "Circuit1-Indianopolis")
         {
             if (numberOfCompletedLaps == 1)

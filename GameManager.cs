@@ -91,7 +91,6 @@ public class GameManager : MonoBehaviour
 
         go.Play();
         lapTimer.SetActive(true);
-        //GameObject.Find("AE86Trueno").GetComponent<InputManager>().enabled = true;
         GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = true;
 
         if (SceneManager.GetActiveScene().name == "Circuit6-RedBullRing")

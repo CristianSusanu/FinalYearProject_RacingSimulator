@@ -18,7 +18,6 @@ public class AIPath : MonoBehaviour
         nodes = new List<Transform>();//to make sure the list is empty at the beginning
 
         for(int i = 0; i < pathTransform.Length; i++)
-        //for (int i = 1; i < pathTransform.Length; i++)
         {
             if(pathTransform[i] != transform)
             {

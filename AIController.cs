@@ -14,10 +14,6 @@ public class AIController : MonoBehaviour
     private float carSpeed = 0f;
     private float brakeIntensity = 150f;
 
-    //public WheelCollider FrontLeftWheel;
-    //public WheelCollider FrontRightWheel;
-    //public WheelCollider BackLeftWheel;
-    //public WheelCollider BackRightWheel;
     public List<WheelCollider> wheels;//the first 2 being the front wheels and the last 2 the back ones[LF, LR, BL, BR]
     public List<GameObject> wheelMeshes;
     public List<GameObject> steeringWheels;
@@ -149,7 +145,6 @@ public class AIController : MonoBehaviour
         collision = false;
 
         //front right sensor
-        //sensorStart.x += frontSideSensorPos;
         sensorStart += transform.right * frontSideSensorPos;
         if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
         {
@@ -177,7 +172,6 @@ public class AIController : MonoBehaviour
         }
 
         //front left sensor
-        //sensorStart.x -= 2 * frontSideSensorPos;
         sensorStart -= transform.right * 2 * frontSideSensorPos;
         if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
         {
@@ -259,18 +253,11 @@ public class AIController : MonoBehaviour
     float wheelAngle = 0f;
     private void ApplySteer()
     {
-        if (collision) return;//in case you avoid something, don't need to run this
+        if (collision) return;
         Vector3 relVector = transform.InverseTransformPoint(nodes[nodeNumber].position);
         float horizontalSteerVal = relVector.x / relVector.magnitude;
         wheelAngle = steeringAngle * horizontalSteerVal;
         objectSteeringAngle = wheelAngle;
-        /*
-        foreach (GameObject wheel in steeringWheels)
-        {
-            wheel.GetComponent<WheelCollider>().steerAngle = wheelAngle;//to turn the car
-            wheel.transform.localEulerAngles = new Vector3(0f, wheelAngle, 0f);//to turn the wheels
-        }
-        */
     }
 
     private void CheckWheelSlip()
@@ -351,10 +338,7 @@ public class AIController : MonoBehaviour
     {
         foreach (GameObject wheel in steeringWheels)
         {
-            //wheel.GetComponent<WheelCollider>().steerAngle = Mathf.Lerp(wheel.GetComponent<WheelCollider>().steerAngle, objectSteeringAngle, Time.deltaTime * turningSpeed);//to turn the car
             wheel.GetComponent<WheelCollider>().steerAngle = objectSteeringAngle;
-            //wheel.transform.localEulerAngles = new Vector3(0f, objectSteeringAngle, 0f);//to turn the wheels
-            //wheel.transform.localEulerAngles = new Vector3(0f, Mathf.Lerp(wheel.GetComponent<WheelCollider>().steerAngle, objectSteeringAngle, Time.deltaTime * turningSpeed), 0f);//to turn the wheels
         }
     }
 

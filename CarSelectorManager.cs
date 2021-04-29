@@ -25,12 +25,8 @@ public class CarSelectorManager : MonoBehaviour
 
     private void Awake()
     {
-        //delete this for the final version of the game
-        //PlayerPrefs.DeleteAll();
-        //PlayerPrefs.SetInt("pointer", 0);
         vehiclePointer = PlayerPrefs.GetInt("pointer");//get the pointer       
-
-        //instantiate the vehicle stored in the pointer
+        
         GameObject individualCar = Instantiate(carList.cars[vehiclePointer], Vector3.zero, Quaternion.identity) as GameObject;
         individualCar.transform.parent = carStand.transform;
 
@@ -39,12 +35,6 @@ public class CarSelectorManager : MonoBehaviour
 
     private void FixedUpdate()
     {
-        /*
-        car = GameObject.FindGameObjectWithTag("Car");
-        car.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
-        carStand.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
-        */
-
         carStand.transform.Rotate(Vector3.up * standRotationSpeed * Time.deltaTime);
         Debug.Log(PlayerPrefs.GetInt("currency"));
     }

@@ -10,7 +10,6 @@ public class EndRace : MonoBehaviour
     private GameObject finishingCamera;
     public GameObject completeTrigger;
     public GameObject miniMapTrack;
-    //public GameObject levelAudio;
     public GameObject lapManager;
     public AudioSource levelAudio;
 
@@ -30,16 +29,12 @@ public class EndRace : MonoBehaviour
         {
             CarControl.carSpeed = 0f;
             GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>().enabled = false;
-            //GameObject.FindGameObjectWithTag("Player").GetComponent<CarControl>().enabled = false;
-            //GameObject.FindGameObjectWithTag("Player").GetComponent<SpeedIndicator>().enabled = false;
             GameObject.FindGameObjectWithTag("Player").GetComponent<SoundController>().enabled = false;
-            //GameObject.FindGameObjectWithTag("Player").GetComponent<AntiRollBar>().enabled = false;
 
             completeTrigger.SetActive(false);
             
             finishingCamera.SetActive(true);
             miniMapTrack.SetActive(false);
-            //levelAudio.SetActive(false);
             levelAudio.enabled = false;
             lapManager.SetActive(false);
 
@@ -78,7 +73,6 @@ public class EndRace : MonoBehaviour
             {
                 lostPanel.SetActive(true);
             }
-            //car.transform.Find("RaceFinishCub").gameObject.SetActive(true);
         }
     }
 }

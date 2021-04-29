@@ -74,8 +74,7 @@ public class SoundController : MonoBehaviour
         sound.GetComponent<AudioSource>().dopplerLevel = 0f;
         return sound.GetComponent<AudioSource>();
     }
-
-    // Start is called before the first frame update
+    
     void Start()
     {
         engineIdleSource = CreateAudio(engineIdle, "Engine Idle Audio");
@@ -135,8 +134,7 @@ public class SoundController : MonoBehaviour
             engineSource.volume = 0.0f;
         }
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         PlayEngineSound();

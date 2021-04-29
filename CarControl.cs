@@ -46,13 +46,10 @@ public class CarControl : MonoBehaviour
     float[] engineEfficiency = {0.5f, 0.52f, 0.54f, 0.56f, 0.58f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.7f, 0.72f, 0.74f, 0.76f, 0.78f, 0.8f, 0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f, 0.94f, 0.96f, 0.98f, 1.0f, 1.0f, 1.0f, 0.96f, 0.92f, 0.88f, 0.84f, 0.8f, 0.76f, 0.72f, 0.68f};
     float engineEfficiencyStep = 250.0f;
 
-    public Vector3 engineOrientation = Vector3.right;//to control the car body movement with the increase in RPM
-
     public bool autoTransmission = false;
     public bool tractionControlEngage = true;
 
     public static float carSpeed = 0.0f;
-    //private float carMaxSpeed = 240f;
     private float reverseGearMaxSpeed = 25f;
     private float firstGearMaxSpeed = 85f;
     private float secondGearMaxSpeed = 155f;
@@ -65,8 +62,7 @@ public class CarControl : MonoBehaviour
     public List<GameObject> brakeLight;
     public List<GameObject> reverseLight;
     public List<GameObject> signalLights;
-
-    //public float strengthCoeffiecient = 30000f;
+    
     private float brakeIntensity = 13000f;
 
     private float downForce = 50.0f;
@@ -121,11 +117,9 @@ public class CarControl : MonoBehaviour
         }
     }
 
-    // Start is called before the first frame update
     void Start()
     {
         rigidB = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
-        //inputManager = GameObject.FindGameObjectWithTag("Player").GetComponent<InputManager>();
 
         inputManager = GetComponent<InputManager>();
         soundController = GetComponent<SoundController>();
@@ -243,52 +237,14 @@ public class CarControl : MonoBehaviour
 
         brakeAndAccelerate();
         Steering();
-
-        //Debug.Log("Traction Control: " + tractionControlEngage);
-
-        /*  //front wheel steering
-          FrontLeftWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
-          FrontLeftWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);
-
-          FrontRightWheel.GetComponent<WheelCollider>().steerAngle = maxWheelTurn * inputManager.steering;
-          FrontRightWheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxWheelTurn, 0f);*/
         
         foreach (GameObject wheel in wheelMeshes)
         {
             wheel.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).x >= 0 ? 1 : -1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
         }
-
-
-        //rigidB.AddForceAtPosition(-transform.up * rigidB.velocity.sqrMagnitude, transform.position);
+        
         rigidB.AddForce(-transform.up * downForce * rigidB.velocity.magnitude);
     }
-
-    /*
-
-    foreach (WheelCollider wheel in throttleWheels)
-    {
-        if (inputManager.brake)
-        {
-            wheel.motorTorque = 0f;
-            wheel.brakeTorque = brakeIntensity * Time.deltaTime; //multiply by time to account for faster computer frames
-        }
-        else
-        {
-            wheel.motorTorque = strengthCoeffiecient * Time.deltaTime * inputManager.throttle;
-            wheel.brakeTorque = 0f;
-        }
-    }
-
-    foreach (GameObject wheel in steeringWheels)
-    {
-        wheel.GetComponent<WheelCollider>().steerAngle = maxTurn * inputManager.steering;
-        wheel.transform.localEulerAngles = new Vector3(0f, inputManager.steering * maxTurn, 0f);
-    }
-
-    foreach (GameObject mesh in meshes)
-    {
-        mesh.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).z >= 0 ? -1 : 1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
-    }*/
 
     private float wheelBaseLength = 2.4f;
     private float rearTrackSize = 1.35f;
@@ -396,8 +352,6 @@ public class CarControl : MonoBehaviour
 
     private WheelFrictionCurve sidewaysFriction;
     private WheelFrictionCurve forwardFriction;
-    //private float tractionControlMultiplier = 2.0f;
-    //private float tractionSlip;//driftfactor de la el
     
     private void tractionControl()
     {
@@ -446,123 +400,5 @@ public class CarControl : MonoBehaviour
                 wheel.forwardFriction = forwardFriction;
             }
         }
-            /*
-            float tractionFactor = 0.7f * Time.deltaTime;//time taken to switch off the traction control
-
-            if (!tractionControlEngage)
-            {
-                sidewaysFriction = wheels[0].sidewaysFriction;
-                forwardFriction = wheels[0].forwardFriction;
-
-                float velocity = 0f;
-                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = forwardFriction.extremumValue = forwardFriction.asymptoteValue =
-                    Mathf.SmoothDamp(forwardFriction.asymptoteValue, tractionSlip * tractionControlMultiplier, ref velocity, tractionFactor);
-
-                for(int i = 0; i < 4; i++)
-                {
-                    wheels[i].sidewaysFriction = sidewaysFriction;
-                    wheels[i].forwardFriction = forwardFriction;
-                }
-
-                forwardFriction.stiffness = 1.8f;
-                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = forwardFriction.extremumValue = forwardFriction.asymptoteValue = 0.8f;
-                sidewaysFriction.stiffness = 4f;
-
-                //extra grip for front tires
-                for (int i = 0; i < 2; i++)
-                {
-                    wheels[i].sidewaysFriction = sidewaysFriction;
-                    wheels[i].forwardFriction = forwardFriction;
-                }
-                rigidB.AddForce(transform.forward * (rigidB.velocity.magnitude * 3.6f / 400) * 10000);
-            }
-            //in case handbrake is being held
-            else if(tractionControlEngage)
-            {
-                sidewaysFriction = wheels[0].sidewaysFriction;
-                forwardFriction = wheels[0].forwardFriction;
-                forwardFriction.extremumSlip = forwardFriction.extremumValue = forwardFriction.asymptoteSlip = forwardFriction.asymptoteValue = 2.0f;
-
-                //forwardFriction.extremumValue = forwardFriction.asymptoteValue = sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue =
-                //    ((rigidB.velocity.magnitude * 3.6f * tractionControlMultiplier) / 300) +1;
-
-                for (int i = 0; i < 4; i++)
-                {
-                    wheels[i].sidewaysFriction = sidewaysFriction;
-                    wheels[i].forwardFriction = forwardFriction;
-                }
-            }
-
-            //to check the amount of slip for controlling the drift
-            for(int i = 2; i < 4; i++)
-            {
-                WheelHit hit;
-
-                wheels[i].GetGroundHit(out hit);
-
-                if(hit.sidewaysSlip < 0)
-                {
-                    tractionSlip = 1 - inputManager.steering * Mathf.Abs(hit.sidewaysSlip);
-                }
-                if (hit.sidewaysSlip > 0)
-                {
-                    tractionSlip = 1 + inputManager.steering * Mathf.Abs(hit.sidewaysSlip);
-                }
-            }
-
-
-            /*
-            if (inputManager.tractionControlToggle)
-            {
-                sidewaysFriction = FrontLeftWheel.sidewaysFriction;
-                forwardFriction = FrontLeftWheel.forwardFriction;
-
-                float velocity = 0.0f;
-
-                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = forwardFriction.extremumValue = forwardFriction.asymptoteValue =
-                    Mathf.SmoothDamp(forwardFriction.asymptoteValue, tractionSlip * tractionControlMultiplier, ref velocity, tractionFactor);
-                FrontLeftWheel.sidewaysFriction = sidewaysFriction;
-                FrontLeftWheel.forwardFriction = forwardFriction;
-                FrontRightWheel.sidewaysFriction = sidewaysFriction;
-                FrontRightWheel.forwardFriction = forwardFriction;
-
-                BackLeftWheel.sidewaysFriction = sidewaysFriction;
-                BackLeftWheel.forwardFriction = forwardFriction;
-                BackRightWheel.sidewaysFriction = sidewaysFriction;
-                BackRightWheel.forwardFriction = forwardFriction;
-
-                sidewaysFriction.extremumValue = sidewaysFriction.asymptoteValue = forwardFriction.extremumValue = forwardFriction.asymptoteValue = 1.1f;
-
-                //adding more grip to front wheels
-                FrontLeftWheel.sidewaysFriction = sidewaysFriction;
-                FrontLeftWheel.forwardFriction = forwardFriction;
-                FrontRightWheel.sidewaysFriction = sidewaysFriction;
-                FrontRightWheel.forwardFriction = forwardFriction;
-                rigidB.AddForce(transform.forward * (rigidB.velocity.magnitude * 3.6f / 400) * 10000);
-            }
-
-            //check the slip amount
-            WheelHit hitL;
-            WheelHit hitR;
-            BackLeftWheel.GetGroundHit(out hitL);
-            BackRightWheel.GetGroundHit(out hitR);
-
-            if (hitL.sidewaysSlip < 0)
-            {
-                tractionSlip = (1 + (-inputManager.steering) * Mathf.Abs(hitL.sidewaysSlip));
-            }
-            if(hitL.sidewaysSlip > 0)
-            {
-                tractionSlip = (1 + (inputManager.steering) * Mathf.Abs(hitL.sidewaysSlip));
-            }
-
-            if (hitR.sidewaysSlip < 0)
-            {
-                tractionSlip = (1 + (-inputManager.steering) * Mathf.Abs(hitR.sidewaysSlip));
-            }
-            if (hitR.sidewaysSlip > 0)
-            {
-                tractionSlip = (1 + (inputManager.steering) * Mathf.Abs(hitR.sidewaysSlip));
-            }*/
-        }
+    }
 }
