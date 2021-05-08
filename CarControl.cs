@@ -11,12 +11,15 @@ public class CarControl : MonoBehaviour
     public InputManager inputManager;
     public LightningManager lightMan;
 
-    //public List<WheelCollider> throttleWheels;
-
     public WheelCollider FrontLeftWheel;
     public WheelCollider FrontRightWheel;
     public WheelCollider BackLeftWheel;
     public WheelCollider BackRightWheel;
+
+    private float wheelBaseLength = 2.4f;
+    private float rearTrackSize = 1.35f;
+    private float turnRadius = 0f;
+    private float maxWheelTurn = 20f;
 
     public List<WheelCollider> wheels;
 
@@ -43,7 +46,7 @@ public class CarControl : MonoBehaviour
     public float maxPower = 96000;//96kw at 6600RPM
     public float powerRPM = 6600;
 
-    float[] engineEfficiency = {0.5f, 0.52f, 0.54f, 0.56f, 0.58f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.7f, 0.72f, 0.74f, 0.76f, 0.78f, 0.8f, 0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f, 0.94f, 0.96f, 0.98f, 1.0f, 1.0f, 1.0f, 0.96f, 0.92f, 0.88f, 0.84f, 0.8f, 0.76f, 0.72f, 0.68f};
+    float[] engineEfficiency = { 0f, 0.2f, 0.22f, 0.24f, 0.26f, 0.3f, 0.4f, 0.42f, 0.44f, 0.46f, 0.48f, 0.5f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.75f, 0.8f, 0.83f, 0.86f, 0.89f, 0.92f, 0.95f, 0.98f, 1.0f, 1.0f, 1.0f, 0.98f, 0.96f, 0.92f, 0.88f, 0.84f, 0.8f, 0.76f, 0.72f, 0.68f};
     float engineEfficiencyStep = 250.0f;
 
     public bool autoTransmission = false;
@@ -232,7 +235,6 @@ public class CarControl : MonoBehaviour
             index = 0;
         }
 
-        //calculate torque
         torqueCalculation();
 
         brakeAndAccelerate();
@@ -240,16 +242,11 @@ public class CarControl : MonoBehaviour
         
         foreach (GameObject wheel in wheelMeshes)
         {
-            wheel.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).x >= 0 ? 1 : -1) / (2 * Mathf.PI * 0.3f), 0f, 0f); //ternary operator: 1 > 0? "?":"!"
+            wheel.transform.Rotate(rigidB.velocity.magnitude * (transform.InverseTransformDirection(rigidB.velocity).x >= 0 ? 1 : -1) / (2 * Mathf.PI * 0.3f), 0f, 0f); 
         }
         
         rigidB.AddForce(-transform.up * downForce * rigidB.velocity.magnitude);
     }
-
-    private float wheelBaseLength = 2.4f;
-    private float rearTrackSize = 1.35f;
-    private float turnRadius = 0f;
-    private float maxWheelTurn = 20f;
 
     private void Steering()
     {
@@ -337,7 +334,7 @@ public class CarControl : MonoBehaviour
         }
     }
 
-    //use anti brake lock system to prevent the wheels from locking
+    //use anti-lock brake system
     private void absApply(WheelCollider wheel)
     {
         if (wheel.brakeTorque >= 0.1f)

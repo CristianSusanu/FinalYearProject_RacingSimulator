@@ -16,7 +16,6 @@ public class MenuLoadBar : MonoBehaviour
     {
         StartCoroutine(LoadSceneAsyncronously(sceneNumber));
 
-        //to accomodate for when the time is 0 for winning screens
         if (Time.timeScale == 0f)
         {
             Time.timeScale = 1f;

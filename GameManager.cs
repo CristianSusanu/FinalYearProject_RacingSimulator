@@ -70,11 +70,11 @@ public class GameManager : MonoBehaviour
 
         GameObject.Find("LapTimeManager").GetComponent<LapTimeManager>().enabled = false;
 
-        yield return new WaitForSeconds(0.5f);//to wait for half a second
+        yield return new WaitForSeconds(0.5f);
         raceStartCounter.GetComponent<Text>().text = "3";
         getReady.Play();
         raceStartCounter.SetActive(true);
-        yield return new WaitForSeconds(1);//wait for a second as the animation takes a second
+        yield return new WaitForSeconds(1);
         raceStartCounter.SetActive(false);
 
         raceStartCounter.GetComponent<Text>().text = "2";

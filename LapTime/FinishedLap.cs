@@ -14,9 +14,8 @@ public class FinishedLap : MonoBehaviour
     public GameObject miliSec;
     public GameObject finish;
 
-    //to count the number of laps
     public GameObject lapCount;
-    public int numberOfCompletedLaps;
+    public int numberOfCompletedLaps;//counts the number of finished laps
 
     public float rawTime;
 

@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 public class CarSelectorManager : MonoBehaviour
 {
     public CarSelectorList carList;
-    //public GameObject car;
     public GameObject carStand;
     private float standRotationSpeed = 15f;
     public int vehiclePointer = 0;
@@ -25,7 +24,7 @@ public class CarSelectorManager : MonoBehaviour
 
     private void Awake()
     {
-        vehiclePointer = PlayerPrefs.GetInt("pointer");//get the pointer       
+        vehiclePointer = PlayerPrefs.GetInt("pointer");    
         
         GameObject individualCar = Instantiate(carList.cars[vehiclePointer], Vector3.zero, Quaternion.identity) as GameObject;
         individualCar.transform.parent = carStand.transform;
@@ -43,7 +42,7 @@ public class CarSelectorManager : MonoBehaviour
     {
         if (vehiclePointer < carList.cars.Length - 1)
         {
-            Destroy(GameObject.FindGameObjectWithTag("Player"));//destroy the current car from the scene
+            Destroy(GameObject.FindGameObjectWithTag("Player"));
             vehiclePointer++;
             PlayerPrefs.SetInt("pointer", vehiclePointer);
             GameObject individualCar = Instantiate(carList.cars[vehiclePointer], Vector3.zero, carStand.transform.rotation) as GameObject;

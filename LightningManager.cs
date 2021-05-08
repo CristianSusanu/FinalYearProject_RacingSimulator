@@ -17,7 +17,6 @@ public class LightningManager : MonoBehaviour
     {
         foreach (Light light in lights)
         {
-            //light.intensity = light.intensity == 0 ? 2 : 0;
             if(light.intensity == 0)
             {
                 light.intensity = 4;

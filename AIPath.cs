@@ -6,22 +6,21 @@ public class AIPath : MonoBehaviour
 {
     public Color lineCol;
 
-    private List<Transform> nodes = new List<Transform>();//only contains the child nodes, not itself
+    private List<Transform> nodes = new List<Transform>();
 
-    //private void OnDrawGizmosSelected()//the function will be executed only when the game object is selected
-    private void OnDrawGizmos()//schimb cu cea de sus cand termin, ca sa apara pathul doar cand selected
+    private void OnDrawGizmosSelected()
     {
         Gizmos.color = lineCol;
 
         Transform[] pathTransform = GetComponentsInChildren<Transform>();
 
-        nodes = new List<Transform>();//to make sure the list is empty at the beginning
+        nodes = new List<Transform>();
 
         for(int i = 0; i < pathTransform.Length; i++)
         {
             if(pathTransform[i] != transform)
             {
-                nodes.Add(pathTransform[i]);//if it's not our own transform, it adds it to the nodes array
+                nodes.Add(pathTransform[i]);
             }
         }
 
@@ -38,8 +37,8 @@ public class AIPath : MonoBehaviour
                 previousNodePosition = nodes[nodes.Count - 1].position;
             }
 
-            Gizmos.DrawLine(previousNodePosition, currentNodePosition); //to draw the line between the points
-            Gizmos.DrawWireSphere(currentNodePosition, 0.7f);//to see the nodes on the circuit
+            Gizmos.DrawLine(previousNodePosition, currentNodePosition);
+            Gizmos.DrawWireSphere(currentNodePosition, 0.7f);
         }
     }
 }

@@ -9,7 +9,6 @@ public class AIController : MonoBehaviour
     private int nodeNumber = 0;
 
     private float steeringAngle = 30f;
-    //private float turningSpeed = 0.1f;
     public float motorTorque = 25000f;
     private float carSpeed = 0f;
     private float brakeIntensity = 150f;
@@ -28,9 +27,8 @@ public class AIController : MonoBehaviour
 
     //for gearbox
     public bool movingVehicle = false;
-
-    //The GT86 has a max engine RPM of 7000RPM
-    private float[] GearRatio = new float[] { 3.437f, 3.626f, 2.188f, 1.541f, 1.213f, 1f, 0.76f }; //[R, 1, 2, 3, 4, 5, 6] 3.484f pt R 6MT Transmission
+    
+    private float[] GearRatio = new float[] {3.437f, 3.626f, 2.188f, 1.541f, 1.213f, 1f, 0.76f }; //[R, 1, 2, 3, 4, 5, 6]
     private float finalDriveRatio = 4.1f;// this is multiplied with each gear ratio
     private int currentGear = 1;
     public float engineRPM = 0f;
@@ -42,10 +40,19 @@ public class AIController : MonoBehaviour
     private float downShiftRPM = 3000.0f;
     private int index = 0;
 
-    float[] engineEfficiency = { 0.56f, 0.58f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.7f, 0.72f, 0.74f, 0.76f, 0.78f, 0.8f, 0.82f, 0.84f, 0.86f, 0.88f, 0.9f, 0.92f, 0.94f, 0.96f, 0.98f, 1.0f, 1.0f, 0.96f, 0.92f, 0.88f, 0.84f };
+    float[] engineEfficiency = {0f, 0.2f, 0.22f, 0.24f, 0.26f, 0.3f, 0.4f, 0.42f, 0.44f, 0.46f, 0.48f, 0.5f, 0.55f, 0.58f, 0.6f, 0.62f, 0.64f, 0.66f, 0.68f, 0.72f, 0.76f, 0.8f, 0.85f, 0.87f, 0.93f, 0.96f, 1.0f, 1.0f, 0.85f};
     float engineEfficiencyStep = 250.0f;
 
     private float newTorque = 0.0f;
+
+    [Header("Sensors")]
+    public float sensorLen = 30f;
+    public Vector3 frontSensorPos = new Vector3(0f, 0.55f, 0f);
+    public float frontSideSensorPos = 0.75f;
+    public float frontSensorAngled = 30f;
+    private bool collision = false;//if anything is hit, this becomes true
+
+    public float objectSteeringAngle = 0f;
 
     public void ShiftUp()
     {
@@ -63,26 +70,17 @@ public class AIController : MonoBehaviour
         }
     }
 
-    [Header("Sensors")]
-    public float sensorLen = 30f;
-    public Vector3 frontSensorPos = new Vector3(0f, 0.55f, 0f);
-    public float frontSideSensorPos = 0.75f;
-    public float frontSensorAngled = 30f;
-    private bool collision = false;//if anything is hit, this becomes true
-
-    public float objectSteeringAngle = 0f;
-
     void Start()
     {
         Transform[] pathTransform = path.GetComponentsInChildren<Transform>();
 
-        nodes = new List<Transform>();//to make sure the list is empty at the beginning
+        nodes = new List<Transform>();
 
         for (int i = 0; i < pathTransform.Length; i++)
         {
             if (pathTransform[i] != path.transform)
             {
-                nodes.Add(pathTransform[i]);//if it's not our own transform, it adds it to the nodes array
+                nodes.Add(pathTransform[i]);
             }
         }
 
@@ -137,37 +135,34 @@ public class AIController : MonoBehaviour
     private void Sensors()
     {
         RaycastHit hit;
-        //Vector3 sensorStart = transform.position + frontSensorPos;
         Vector3 sensorStart = transform.position;
         sensorStart += transform.forward * frontSensorPos.z;//to place the sensor at the front of the car
         sensorStart += transform.up * frontSensorPos.y;//to place the sensor a bit higher on the x axis
-        float collisionMultiplicator = 0f;//for each sensor, a certain amount is added to this (right is negative, left is positive)
+        float collisionMultiplicator = 0f;
         collision = false;
 
         //front right sensor
         sensorStart += transform.right * frontSideSensorPos;
         if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
         {
-            //check if the terrain is hit, to not avoid it as it is not an obstacle
             if (!hit.collider.CompareTag("Terrain")) 
             {
                 Debug.DrawLine(sensorStart, hit.point);
 
-                collision = true;//to indicate something else than terrain was hit
-                collisionMultiplicator -= 1f;//need to avoid detected object at the right, so wheels turn left (negative wheel angle)
+                collision = true;
+                collisionMultiplicator -= 1f;
             }
         }
 
         //front right angled sensor
         else if (Physics.Raycast(sensorStart, Quaternion.AngleAxis(frontSensorAngled, transform.up) * transform.forward, out hit, sensorLen))
         {
-            //check if the terrain is hit, to not avoid it as it is not an obstacle
             if (!hit.collider.CompareTag("Terrain"))
             {
                 Debug.DrawLine(sensorStart, hit.point);
 
-                collision = true;//to indicate something else than terrain was hit
-                collisionMultiplicator -= 0.5f;//need to avoid detected object at the right, so wheels turn left (negative wheel angle)
+                collision = true;
+                collisionMultiplicator -= 0.5f;
             }
         }
 
@@ -175,26 +170,24 @@ public class AIController : MonoBehaviour
         sensorStart -= transform.right * 2 * frontSideSensorPos;
         if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
         {
-            //check if the terrain is hit, to not avoid it as it is not an obstacle
             if (!hit.collider.CompareTag("Terrain"))
             {
                 Debug.DrawLine(sensorStart, hit.point);
 
-                collision = true;//to indicate something else than terrain was hit
-                collisionMultiplicator += 1f;//need to avoid detected object at the right, so wheels turn left (negative wheel angle)
+                collision = true;
+                collisionMultiplicator += 1f;
             }
         }
 
         //front left angled sensor
         else if (Physics.Raycast(sensorStart, Quaternion.AngleAxis(-frontSensorAngled, transform.up) * transform.forward, out hit, sensorLen))
         {
-            //check if the terrain is hit, to not avoid it as it is not an obstacle
             if (!hit.collider.CompareTag("Terrain"))
             {
                 Debug.DrawLine(sensorStart, hit.point);
 
-                collision = true;//to indicate something else than terrain was hit
-                collisionMultiplicator += 0.5f;//need to avoid detected object at the right, so wheels turn left (negative wheel angle)
+                collision = true;
+                collisionMultiplicator += 0.5f;
             }
         }
 
@@ -203,12 +196,11 @@ public class AIController : MonoBehaviour
         {
             if (Physics.Raycast(sensorStart, transform.forward, out hit, sensorLen))
             {
-                //check if the terrain is hit, to not avoid it as it is not an obstacle
-                //also check the checkpoints used for lap numbering for player car, and ignore them for AI car
+
                 if (!hit.collider.CompareTag("Terrain") && !hit.collider.CompareTag("LapCheckpoint"))
                 {
                     Debug.DrawLine(sensorStart, hit.point);
-                    collision = true;//to indicate something else than terrain was hit
+                    collision = true;
 
                     if (hit.normal.x < 0)
                     {
@@ -297,7 +289,7 @@ public class AIController : MonoBehaviour
 
     private void GetWayPointDistance()
     {
-        if (Vector3.Distance(transform.position, nodes[nodeNumber].position) < 0.5f)//transform.pos is the current pos, urmatoarea e node pos
+        if (Vector3.Distance(transform.position, nodes[nodeNumber].position) < 0.5f)
         {
             if(nodeNumber == nodes.Count - 1)
             {

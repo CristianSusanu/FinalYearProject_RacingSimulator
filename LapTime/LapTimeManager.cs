@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class LapTimeManager : MonoBehaviour
 {
-    public static int minCounter;//static to refer to the vriables in another script
+    public static int minCounter;
     public static int secCounter;
     public static float miliSecCounter;
     public static string milisecDisplay;
